@@ -1,0 +1,30 @@
+#hdtb-tls {
+    display:none;
+}
+
+#hdtbMenus {
+    display:none;
+}
+
+.cosmoul {
+    list-style-type: none;
+    margin-left: 150px;
+    overflow: hidden;
+    background-color: #fafafa;
+}
+
+.cosmoli {
+    float: left;
+    width: 64px;
+    margin:0px;
+    padding:0px;
+}
+
+.cosmoli a {
+    display: block;
+    color: "#fafafa";
+    text-align: center;
+    margin:0px;
+    padding: 0px;
+    text-decoration: none;
+}
