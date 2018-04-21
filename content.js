@@ -39,14 +39,13 @@ function createButton(qdr, text) {
 }
 
 function insertNewButtons() {
+    const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
+    const strings = ["All", "1h", "1d", "7d", "1m", "6m", "1y", "2y"];
+    let tbs = getParameterByName("tbs");
     var newParent = document.createElement("ul");
     newParent.className = "time-ul hdtb-msb-vis";
 
-    const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
-    const strings = ["ALL", "1h", "1d", "7d", "1m", "6m", "1y", "2y"];
-
-    let tbs = getParameterByName("tbs");
-    if(tbs != null) {
+    if(tbs != null && tbs.includes("qdr:")) {
         var q = tbs.split(':')[1];
         if(!qdrList.includes(q)) {
             qdrList.push(q);
@@ -58,6 +57,23 @@ function insertNewButtons() {
     for(var i = 0; i < strings.length; i++) {
         newParent.appendChild(createButton(qdrList[i], strings[i]));
     }
+
+    //add Verbatim button
+    var verbatim = document.createElement("li");
+    //if verbatim selected
+    if(tbs == "li:1") {
+        var newUrl = changeUrlParameter("qdr:");
+        verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3-sel">Verbatim</h3></a>'
+        verbatim.className = "time-li time-li-sel";
+        verbatim.id = "li_1";
+    } else { //verbatim not selected
+        var newUrl = changeUrlParameter("li:1");
+        verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">Verbatim</h3></a>'
+        verbatim.className = " time-li-long time-li";
+        verbatim.id = "li_";
+        verbatim.style.width = 64;
+    }
+    newParent.appendChild(verbatim);
 
     let referenceNode = document.getElementById("hdtbSum");
     referenceNode.parentNode.insertBefore(newParent, referenceNode.nextSibling);
