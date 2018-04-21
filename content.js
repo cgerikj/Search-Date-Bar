@@ -17,11 +17,6 @@ function getParameterByName(name, url) {
 
 function changeUrlParameter(value) {
     var href = new URL(location.href);
-    /*if(getParameterByName("tbs")) {
-        return url.replace(/(tbs=).*?(&)/,'$1' + value + '$2');
-    } else {
-        return url + "&tbs=" + value;
-    }*/
     href.searchParams.set("tbs", value);
     return href.toString();
 }
@@ -32,12 +27,12 @@ function createButton(qdr, text) {
     let tbs = getParameterByName("tbs");
     //if already selected
     if(tbs == ("qdr:"+qdr) || tbs == null && qdr == "") {
-        li.innerHTML = '<h3 class="cosmoh3sel">'+text+'</h3>';
-        li.className = "cosmoli hdtb-mitem hdtb-msel hdtb-imb";
+        li.innerHTML = '<h3 class="time-h3-sel">'+text+'</h3>';
+        li.className = "time-li time-li-sel";
     } else { //add url
         var newUrl = changeUrlParameter("qdr:"+qdr);
-        li.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="cosmoh3">'+text+'</h3></a>'
-        li.className = "cosmoli hdtb-mitem hdtb-imb";
+        li.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">'+text+'</h3></a>'
+        li.className = "time-li";
     }
     li.id = "qdr_"+qdr;
     return li;
@@ -46,10 +41,11 @@ function createButton(qdr, text) {
 function insertNewButtons() {
     //new list element
     var newParent = document.createElement("ul");
-    newParent.className = "cosmoul hdtb-msb-vis";
+    newParent.className = "time-ul hdtb-msb-vis";
 
     const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
-    const strings = ["ALL", "1h", "1d", "7d", "30d", "6m", "12m", "24m"];
+    const strings = ["ALL", "1h", "1d", "7d", "1m", "6m", "1y", "2y"];
+
     let tbs = getParameterByName("tbs");
     if(tbs != null) {
         var q = tbs.split(':')[1];
@@ -59,6 +55,7 @@ function insertNewButtons() {
         }
     }
 
+    //add all time buttons to the parent ul
     for(var i = 0; i < strings.length; i++) {
         newParent.appendChild(createButton(qdrList[i], strings[i]));
     }

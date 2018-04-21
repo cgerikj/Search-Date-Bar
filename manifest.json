@@ -2,27 +2,12 @@
   "name": "searchHelper",
   "version": "0.1.0",
   "description": "Unfuck google search",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
   "options_page": "options.html",
   "content_scripts": [{
     "css": ["styles.css"],
     "js": ["content.js"],
-    "matches": ["https://www.google.com/search*", "https://www.google.se/search*"]
+    "matches": ["http://*/*", "https://*/*"],
+    "include_globs": ["http://www.google.*/*", "https://www.google.*/*"]
   }],
-  "page_action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "images/get_started16.png",
-      "32": "images/get_started32.png",
-      "48": "images/get_started48.png",
-      "128": "images/get_started128.png"
-    }
-  },
-  "icons": {
-    "16": "images/get_started16.png",
-    "32": "images/get_started32.png",
-    "48": "images/get_started48.png",
-    "128": "images/get_started128.png"
-  },
   "manifest_version": 2
 }

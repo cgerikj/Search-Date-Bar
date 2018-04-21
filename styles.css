@@ -6,28 +6,50 @@
     display:none;
 }
 
-.cosmoul {
+.time-ul {
     list-style-type: none;
+    margin:0px;
+    padding:0px;
     margin-top: 8px;
-    margin-left: 150px;
+    margin-left: 160px;
     overflow: hidden;
     background-color: #fafafa;
+    text-align: center;
 }
 
-.cosmoli {
-    width: 48px;
+.time-li {
+    padding: 0px;
+    margin:0px auto;
+    width: 34px;
     height:24px;
     float: left;
     text-align: center;
+    display: inline;
 }
-.cosmoli a {
+
+.time-li-sel {
+    border-bottom: 2px solid #319e41;
+}
+
+.time-li a {
+    margin:0px auto;
     display: block;
-    color: "#fafafa";
+    color: #fafafa;
     text-align: center;
     text-decoration: none;
 }
 
-.cosmoh3sel {
-    color: green;
+.time-h3 {
+    color: #777;
+    text-decoration: none;
+}
+
+.time-h3:hover {
+    color: #333333;
+    height: 32px;
+}
+
+.time-h3-sel {
+    color: #319e41;
     height: 32px;
 }
