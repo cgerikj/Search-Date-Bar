@@ -1,14 +1,14 @@
 {
-  "name": "Google Fresh",
-  "version": "0.1.2",
+  "name": "Search Date Bar",
+  "version": "0.1.3",
   "description": "Changes the time selection for google searches and adds more time frames.",
   "options_page": "options.html",
-  "permissions": ["tabs"],
+  "permissions": ["activeTab", "tabs"],
   "content_scripts": [{
     "css": ["styles.css"],
     "js": ["content.js"],
     "matches": ["http://*/*", "https://*/*"],
     "include_globs": ["http://www.google.*/search*", "https://www.google.*/search*"]
   }],
-  "manifest_version": 2
+  "manifest_version": 3
 }
