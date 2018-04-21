@@ -77,7 +77,7 @@ window.onload = function () {
         case "nws": //News page
         case "shop": //Shopping page
         case "fin": //Finance page
-            //document.getElementById("hdtb-tls").style.display = "block";
+            document.getElementById("hdtb-tls").style.display = "inline-block";
             document.getElementById("hdtbMenus").style.display = "block";
             break;
 
