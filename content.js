@@ -29,7 +29,7 @@ function createButton(qdr, text) {
     if(tbs == ("qdr:"+qdr) || tbs == null && qdr == "") {
         li.innerHTML = '<h3 class="time-h3-sel">'+text+'</h3>';
         li.className = "time-li time-li-sel";
-    } else { //add url
+    } else { //add url href
         var newUrl = changeUrlParameter("qdr:"+qdr);
         li.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">'+text+'</h3></a>'
         li.className = "time-li";
@@ -39,7 +39,6 @@ function createButton(qdr, text) {
 }
 
 function insertNewButtons() {
-    //new list element
     var newParent = document.createElement("ul");
     newParent.className = "time-ul hdtb-msb-vis";
 
@@ -65,16 +64,26 @@ function insertNewButtons() {
 }
 
 function removeElements() {
-    //remove select time button
-    removeElement("cdrlnk");
     //remove tools button
     removeElement("hdtb-tls");
+    //remove select time button
+    removeElement("cdrlnk");
 }
 
 window.onload = function () {
-    //don't run on image search
-    if(getParameterByName("tbm") != "isch") {
-        removeElements();
-        insertNewButtons();
+    switch(getParameterByName("tbm")) {
+        case "vid": //Videos page
+        case "isch": //Images page
+        case "nws": //News page
+        case "shop": //Shopping page
+        case "fin": //Finance page
+            //document.getElementById("hdtb-tls").style.display = "block";
+            document.getElementById("hdtbMenus").style.display = "block";
+            break;
+
+        default: //ALL page
+            removeElements();
+            insertNewButtons();
+            break;
     }
 }
