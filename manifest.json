@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "Changes the time selection for google searches and adds more time frames.",
   "options_page": "options.html",
+  "permissions": ["tabs"],
   "content_scripts": [{
     "css": ["styles.css"],
     "js": ["content.js"],
