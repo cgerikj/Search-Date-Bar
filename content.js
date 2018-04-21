@@ -50,6 +50,15 @@ function insertNewButtons() {
 
     const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
     const strings = ["ALL", "1h", "1d", "7d", "30d", "6m", "12m", "24m"];
+    let tbs = getParameterByName("tbs");
+    if(tbs != null) {
+        var q = tbs.split(':')[1];
+        if(!qdrList.includes(q)) {
+            qdrList.push(q);
+            strings.push(q);
+        }
+    }
+
     for(var i = 0; i < strings.length; i++) {
         newParent.appendChild(createButton(qdrList[i], strings[i]));
     }

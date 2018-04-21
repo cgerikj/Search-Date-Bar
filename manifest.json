@@ -7,7 +7,7 @@
   "content_scripts": [{
     "css": ["styles.css"],
     "js": ["content.js"],
-    "matches": ["https://www.google.com/search*"]
+    "matches": ["https://www.google.com/search*", "https://www.google.se/search*"]
   }],
   "page_action": {
     "default_popup": "popup.html",
