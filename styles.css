@@ -8,23 +8,26 @@
 
 .cosmoul {
     list-style-type: none;
+    margin-top: 8px;
     margin-left: 150px;
     overflow: hidden;
     background-color: #fafafa;
 }
 
 .cosmoli {
+    width: 48px;
+    height:24px;
     float: left;
-    width: 64px;
-    margin:0px;
-    padding:0px;
+    text-align: center;
 }
-
 .cosmoli a {
     display: block;
     color: "#fafafa";
     text-align: center;
-    margin:0px;
-    padding: 0px;
     text-decoration: none;
+}
+
+.cosmoh3sel {
+    color: green;
+    height: 32px;
 }

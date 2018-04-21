@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 
 function removeElement(id) {
     var elem = document.getElementById(id);
@@ -16,12 +16,14 @@ function getParameterByName(name, url) {
 }
 
 function changeUrlParameter(value) {
-    var url = location.href;
-    if(getParameterByName("tbs")) {
+    var href = new URL(location.href);
+    /*if(getParameterByName("tbs")) {
         return url.replace(/(tbs=).*?(&)/,'$1' + value + '$2');
     } else {
         return url + "&tbs=" + value;
-    }
+    }*/
+    href.searchParams.set("tbs", value);
+    return href.toString();
 }
 
 function createButton(qdr, text) {
@@ -29,13 +31,13 @@ function createButton(qdr, text) {
 
     let tbs = getParameterByName("tbs");
     //if already selected
-    if(tbs == ("qdr:"+qdr)) {
-        li.className = "cosmoli hdtbItm hdtbSel";
-        li.innerHTML = text;
-    } else { //set selected & add url
-        li.className = "cosmoli hdtbItm";
+    if(tbs == ("qdr:"+qdr) || tbs == null && qdr == "") {
+        li.innerHTML = '<h3 class="cosmoh3sel">'+text+'</h3>';
+        li.className = "cosmoli hdtb-mitem hdtb-msel hdtb-imb";
+    } else { //add url
         var newUrl = changeUrlParameter("qdr:"+qdr);
-        li.innerHTML = '<a class="q qs" href="' + newUrl + '">'+text+'</a>'
+        li.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="cosmoh3">'+text+'</h3></a>'
+        li.className = "cosmoli hdtb-mitem hdtb-imb";
     }
     li.id = "qdr_"+qdr;
     return li;
@@ -44,13 +46,12 @@ function createButton(qdr, text) {
 function insertNewButtons() {
     //new list element
     var newParent = document.createElement("ul");
-    newParent.className = "cosmoul";
+    newParent.className = "cosmoul hdtb-msb-vis";
 
-    const qdrList = ["", "h", "d", "w", "m", "m6", "y", "m24"];
-    const strings = ["ALL", "60m", "24h", "7d", "30d", "6m", "12m", "24m"];
-    for(i = 0; i < strings.length; i++) {
-        let nextElem = createButton(qdrList[i], strings[i]);
-        newParent.appendChild(nextElem);
+    const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
+    const strings = ["ALL", "1h", "1d", "7d", "30d", "6m", "12m", "24m"];
+    for(var i = 0; i < strings.length; i++) {
+        newParent.appendChild(createButton(qdrList[i], strings[i]));
     }
 
     let referenceNode = document.getElementById("hdtbSum");
@@ -65,6 +66,9 @@ function removeElements() {
 }
 
 window.onload = function () {
-    removeElements();
-    insertNewButtons();
+    //don't run on image search
+    if(getParameterByName("tbm") != "isch") {
+        removeElements();
+        insertNewButtons();
+    }
 }
