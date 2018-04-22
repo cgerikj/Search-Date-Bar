@@ -2,7 +2,11 @@
 
 function removeElement(id) {
 	var elem = document.getElementById(id);
-	return elem.parentNode.removeChild(elem);
+	if (elem) elem.parentNode.removeChild(elem);
+}
+
+function changeElementStyle(elem, s, value) {
+	if (elem) elem.style[s] = value;
 }
 
 function getParameterByName(name, url) {
@@ -69,23 +73,21 @@ function insertNewButtons() {
 	} else { //verbatim not selected
 		var newUrl = changeUrlParameter("li:1");
 		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">Verbatim</h3></a>'
-		verbatim.className = " time-li-long time-li";
+		verbatim.className = "time-li";
 		verbatim.id = "li_";
-		verbatim.style.width = 64;
 	}
 	newParent.appendChild(verbatim);
 
 	let referenceNode = document.getElementById("extabar");
-	referenceNode.appendChild(newParent);
+	referenceNode.prepend(newParent);
 }
 
-function removeElements() {
-	//remove tools button
-	removeElement("hdtb-tls");
-	//remove select time button
-	removeElement("cdrlnk");
-	//remove extabar contents
-	document.getElementById("extabar").innerHTML = '';
+function modifyOtherElements() {
+	removeElement("resultStats");
+	removeElement("topabar");
+	changeElementStyle(document.getElementById("botabar"), "paddingBottom", 0);
+	changeElementStyle(document.getElementById("rcnt"), "marginTop", 2);
+	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
 }
 
 window.onload = function () {
@@ -95,12 +97,12 @@ window.onload = function () {
 		case "nws": //News page
 		case "shop": //Shopping page
 		case "fin": //Finance page
-			document.getElementById("hdtb-tls").style.display = "inline-block";
-			document.getElementById("hdtbMenus").style.display = "block";
+			changeElementStyle(document.getElementById("hdtb-tls"), "display", "inline-block");
+			changeElementStyle(document.getElementById("hdtbMenus"), "display", "block");
 			break;
 
 		default: //ALL page
-			removeElements();
+			modifyOtherElements();
 			insertNewButtons();
 			break;
 	}

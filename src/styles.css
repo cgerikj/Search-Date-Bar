@@ -6,33 +6,30 @@
 	display:none;
 }
 
-#extabar {
-	height: 45px;
-	padding-top:5px;
+#resultStats {
+	display:none;
 }
 
 .time-ul {
 	list-style-type: none;
 	margin:0px;
 	padding:0px;
-	margin-top: 8px;
-	margin-left: 160px;
+	padding-top: 13px;
+	padding-bottom: 0px;
+	padding-left:160px;
 	overflow: hidden;
 	text-align: center;
+	background-color: #f9f9f9;
 }
 
 .time-li {
 	padding-left: 5px;
 	padding-right: 5px;
-	margin:0px auto;
-	height:24px;
+	/*margin:0px auto;*/
+	height:28px;
 	float: left;
 	text-align: center;
 	display: inline;
-}
-
-.time-li-long { 
-	width: 64px;
 }
 
 .time-li-sel {
@@ -54,10 +51,10 @@
 
 .time-h3:hover {
 	color: #333333;
-	height: 32px;
+	height: 24px;
 }
 
 .time-h3-sel {
 	color: #319e41;
-	height: 32px;
+	height: 24px;
 }
