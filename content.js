@@ -75,15 +75,17 @@ function insertNewButtons() {
     }
     newParent.appendChild(verbatim);
 
-    let referenceNode = document.getElementById("hdtbSum");
-    referenceNode.parentNode.insertBefore(newParent, referenceNode.nextSibling);
+	let referenceNode = document.getElementById("extabar");
+	referenceNode.appendChild(newParent);
 }
 
 function removeElements() {
     //remove tools button
     removeElement("hdtb-tls");
     //remove select time button
-    removeElement("cdrlnk");
+	removeElement("cdrlnk");
+	//remove extabar contents
+	document.getElementById("extabar").innerHTML = '';
 }
 
 window.onload = function () {

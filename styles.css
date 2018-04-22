@@ -6,6 +6,11 @@
     display:none;
 }
 
+#extabar {
+    height: 45px;
+    padding-top:5px;
+}
+
 .time-ul {
     list-style-type: none;
     margin:0px;
