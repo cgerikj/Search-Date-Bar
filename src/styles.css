@@ -1,0 +1,63 @@
+#hdtb-tls {
+	display:none;
+}
+
+#hdtbMenus {
+	display:none;
+}
+
+#extabar {
+	height: 45px;
+	padding-top:5px;
+}
+
+.time-ul {
+	list-style-type: none;
+	margin:0px;
+	padding:0px;
+	margin-top: 8px;
+	margin-left: 160px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.time-li {
+	padding-left: 5px;
+	padding-right: 5px;
+	margin:0px auto;
+	height:24px;
+	float: left;
+	text-align: center;
+	display: inline;
+}
+
+.time-li-long { 
+	width: 64px;
+}
+
+.time-li-sel {
+	border-bottom: 2px solid #319e41;
+}
+
+.time-li a {
+	margin:0px auto;
+	display: block;
+	color: #fafafa;
+	text-align: center;
+	text-decoration: none;
+}
+
+.time-h3 {
+	color: #777;
+	text-decoration: none;
+}
+
+.time-h3:hover {
+	color: #333333;
+	height: 32px;
+}
+
+.time-h3-sel {
+	color: #319e41;
+	height: 32px;
+}
