@@ -19,22 +19,43 @@ function getParameterByName(name, url) {
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function changeUrlParameter(value) {
+function addTbsParameter(parameter, value) {
 	var href = new URL(location.href);
-	href.searchParams.set("tbs", value);
+	if(!value) {
+		href.searchParams.delete("tbs");
+		return href.toString();
+	}
+
+	var tbs = getParameterByName("tbs");
+	if(tbs && tbs.includes(",")) {
+		let split = tbs.split(",");
+		switch(parameter) {
+			case "qdr":
+				href.searchParams.set("tbs", "qdr:" + value + "," + split[1]);
+				break;
+
+			case "li":
+				href.searchParams.set("tbs", "li:" + value);
+				break; 
+		}
+	} else {
+		if(parameter == "sbd") {
+			href.searchParams.set("tbs", tbs + "," + "sbd:" + value);
+		} else {
+			href.searchParams.set("tbs", parameter + ":" + value);
+		}
+	}
 	return href.toString();
 }
 
-function createButton(qdr, text) {
+function createButton(qdr, tbs, text) {
 	var li = document.createElement("li");
-
-	let tbs = getParameterByName("tbs");
 	//if already selected
 	if(tbs == ("qdr:"+qdr) || tbs == null && qdr == "") {
 		li.innerHTML = '<h3 class="time-h3-sel">'+text+'</h3>';
 		li.className = "time-li time-li-sel";
 	} else { //add url href
-		var newUrl = changeUrlParameter("qdr:"+qdr);
+		var newUrl = addTbsParameter("qdr", qdr);
 		li.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">'+text+'</h3></a>'
 		li.className = "time-li";
 	}
@@ -46,37 +67,63 @@ function insertNewButtons() {
 	const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
 	const strings = ["All", "1h", "1d", "7d", "1m", "6m", "1y", "2y"];
 	let tbs = getParameterByName("tbs");
-	var newParent = document.createElement("ul");
-	newParent.className = "time-ul hdtb-msb-vis";
-
-	if(tbs != null && tbs.includes("qdr:")) {
-		var q = tbs.split(':')[1];
-		if(!qdrList.includes(q)) {
-			qdrList.push(q);
-			strings.push(q);
+	let sbd = null;
+	if(tbs && tbs.includes("sbd:1")) {
+		let part1 = tbs.split(",")[0];
+		let part2 = tbs.split(",")[1];
+		if(part1.includes("qdr")) { //qdr and sbd can come in different orders..
+			tbs = part1;
+			sbd = part2;
+		} else {
+			tbs = part2;
+			sbd = part1;
 		}
 	}
 
+	var newParent = document.createElement("ul");
+	newParent.className = "time-ul hdtb-msb-vis";
+
 	//add all time buttons to the parent ul
 	for(var i = 0; i < strings.length; i++) {
-		newParent.appendChild(createButton(qdrList[i], strings[i]));
+		newParent.appendChild(createButton(qdrList[i], tbs, strings[i]));
 	}
 
 	//add Verbatim button
 	var verbatim = document.createElement("li");
+	verbatim.style.cssFloat = "right";
+	verbatim.style.marginLeft = "10px";
 	//if verbatim selected
 	if(tbs == "li:1") {
-		var newUrl = changeUrlParameter("qdr:");
+		var newUrl = addTbsParameter("qdr", null);
 		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3-sel">Verbatim</h3></a>'
 		verbatim.className = "time-li time-li-sel";
 		verbatim.id = "li_1";
 	} else { //verbatim not selected
-		var newUrl = changeUrlParameter("li:1");
+		var newUrl = addTbsParameter("li", 1);
 		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">Verbatim</h3></a>'
 		verbatim.className = "time-li";
 		verbatim.id = "li_";
 	}
 	newParent.appendChild(verbatim);
+
+	//add search by date button
+	if(tbs && tbs.includes("qdr")) {
+		var searchByDate = document.createElement("li");
+		searchByDate.style.cssFloat = "right";
+		//sbd selected
+		if (sbd) {
+			var newUrl = addTbsParameter("qdr", null);
+			searchByDate.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3-sel">By Date</h3></a>'
+			searchByDate.className = "time-li time-li-sel";
+			searchByDate.id = "sbd_1";
+		} else { //sbd not selected
+			var newUrl = addTbsParameter("sbd", 1);
+			searchByDate.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">By Date</h3></a>'
+			searchByDate.className = "time-li";
+			searchByDate.id = "sbd_";
+		}
+		newParent.appendChild(searchByDate);
+	}
 
 	let referenceNode = document.getElementById("extabar");
 	referenceNode.prepend(newParent);
@@ -86,7 +133,6 @@ function modifyOtherElements() {
 	removeElement("resultStats");
 	removeElement("topabar");
 	changeElementStyle(document.getElementById("botabar"), "paddingBottom", 0);
-	changeElementStyle(document.getElementById("rcnt"), "marginTop", 2);
 	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
 }
 
