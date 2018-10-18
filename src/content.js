@@ -1,5 +1,42 @@
 'use strict';
 
+// thx https://stackoverflow.com/a/40724354/2407063
+var SI_SYMBOL = ["", "k", "M", "G", "T", "P", "E"];
+function abbreviateNumber(number){
+
+    // what tier? (determines SI symbol)
+    var tier = Math.log10(number) / 3 | 0;
+
+    // if zero, we don't need a suffix
+    if(tier == 0) return number;
+
+    // get suffix and determine scale
+    var suffix = SI_SYMBOL[tier];
+    var scale = Math.pow(10, tier * 3);
+
+    // scale the number
+    var scaled = number / scale;
+
+    // format number and add suffix
+    return scaled.toFixed(1) + suffix;
+}
+
+function getResultsAmount(resultsString) {
+	resultsString = resultsString.replace(/\s|\.|\,/g, "");
+	let foundFirstNum = false;
+	let numString = "";
+	for (let char of resultsString) {
+		if (!isNaN(char)) {
+			numString += char;
+			foundFirstNum = true;
+		} else {
+			if (foundFirstNum) {
+				return abbreviateNumber(numString);
+			}
+		}
+	}
+}
+
 function removeElement(id) {
 	var elem = document.getElementById(id);
 	if (elem) elem.parentNode.removeChild(elem);
@@ -125,12 +162,23 @@ function insertNewButtons() {
 		newParent.appendChild(searchByDate);
 	}
 
+	
+	var resultStats = document.getElementById("resultStats");
+	if (resultStats) {
+		resultStats.id = "whyareyoureadingthismess";
+		resultStats.style.float = "right";
+		resultStats.style.marginRight = "16px";
+		resultStats.style.paddingTop = "1px";
+		resultStats.style.color = "rgb(119, 119, 119)";
+		resultStats.innerText = `~ ${getResultsAmount(resultStats.innerText)} results`;
+		newParent.appendChild(resultStats);
+	}
+
 	let referenceNode = document.getElementById("extabar");
 	referenceNode.prepend(newParent);
 }
 
 function modifyOtherElements() {
-	removeElement("resultStats");
 	removeElement("topabar");
 	changeElementStyle(document.getElementById("botabar"), "paddingBottom", 0);
 	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
@@ -148,8 +196,8 @@ window.onload = function () {
 			break;
 
 		default: //ALL page
-			modifyOtherElements();
 			insertNewButtons();
+			modifyOtherElements();
 			break;
 	}
 }
