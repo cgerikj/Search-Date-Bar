@@ -1,6 +1,6 @@
 {
-  "name": "Search Date Bar",
-  "version": "0.2.0",
+  "name": "Google Search by Time/Date",
+  "version": "0.3.0",
   "description": "Always shows the date selection in a new bar menu. Adds 6mo and 2y options.",
   "options_page": "options.html",
   "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
