@@ -163,23 +163,26 @@ function insertNewButtons() {
 	}
 
 	
-	var resultStats = document.getElementById("resultStats");
+	var resultStats = document.getElementById("result-stats");
 	if (resultStats) {
 		resultStats.id = "whyareyoureadingthismess";
 		resultStats.style.float = "right";
 		resultStats.style.marginRight = "16px";
 		resultStats.style.paddingTop = "1px";
 		resultStats.style.color = "rgb(119, 119, 119)";
-		resultStats.innerText = `~ ${getResultsAmount(resultStats.innerText)} results`;
+		resultStats.setAttribute('title', resultStats.innerText);
+		resultStats.innerText = `~ ${getResultsAmount(resultStats.innerText)}`;
 		newParent.appendChild(resultStats);
 	}
 
 	let referenceNode = document.getElementById("extabar");
-	referenceNode.prepend(newParent);
+	if (referenceNode) {
+		referenceNode.prepend(newParent);
+	}
 }
 
 function modifyOtherElements() {
-	removeElement("topabar");
+	removeElement("slim_appbar");
 	changeElementStyle(document.getElementById("botabar"), "paddingBottom", 0);
 	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
 }
