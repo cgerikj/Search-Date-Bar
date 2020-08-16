@@ -187,7 +187,7 @@ function modifyOtherElements() {
 	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
 }
 
-window.onload = function () {
+function load() {
 	switch(getParameterByName("tbm")) {
 		case "vid": //Videos page
 		case "isch": //Images page
@@ -204,3 +204,12 @@ window.onload = function () {
 			break;
 	}
 }
+
+const waitFor = async selector => {
+	while (!document.querySelector(selector)) {
+		await new Promise(requestAnimationFrame)
+	}
+}
+
+waitFor('#result-stats')
+load()
