@@ -1,7 +1,7 @@
 {
-  "name": "Google Search by Time/Date",
-  "version": "0.3.2",
-  "description": "Always shows the date selection in a new bar menu. Adds 6mo and 2y options.",
+  "name": "Google Search by date - horizontal bar",
+  "version": "0.4.0",
+  "description": "Always show the date selection in a horizontal menu. Adds 6 months, 2 years & 5 years and custom search ranges.",
   "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "browser_action": { "default_icon": "icons/icon32.png" },
   "manifest_version": 2,

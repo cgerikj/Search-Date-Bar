@@ -56,32 +56,9 @@ function getParameterByName(name, url) {
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function addTbsParameter(parameter, value) {
+function setTbsParameter(parameter, value) {
 	var href = new URL(location.href);
-	if(!value) {
-		href.searchParams.delete("tbs");
-		return href.toString();
-	}
-
-	var tbs = getParameterByName("tbs");
-	if(tbs && tbs.includes(",")) {
-		let split = tbs.split(",");
-		switch(parameter) {
-			case "qdr":
-				href.searchParams.set("tbs", "qdr:" + value + "," + split[1]);
-				break;
-
-			case "li":
-				href.searchParams.set("tbs", "li:" + value);
-				break; 
-		}
-	} else {
-		if(parameter == "sbd") {
-			href.searchParams.set("tbs", tbs + "," + "sbd:" + value);
-		} else {
-			href.searchParams.set("tbs", parameter + ":" + value);
-		}
-	}
+	href.searchParams.set("tbs", parameter + ":" + value);
 	return href.toString();
 }
 
@@ -89,10 +66,10 @@ function createButton(qdr, tbs, text) {
 	var li = document.createElement("li");
 	//if already selected
 	if(tbs == ("qdr:"+qdr) || tbs == null && qdr == "") {
-		li.innerHTML = '<h3 class="time-h3-sel">'+text+'</h3>';
+		li.innerHTML = '<h3 class="time-h3 time-h3-sel">'+text+'</h3>';
 		li.className = "time-li time-li-sel";
 	} else { //add url href
-		var newUrl = addTbsParameter("qdr", qdr);
+		var newUrl = setTbsParameter("qdr", qdr);
 		li.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">'+text+'</h3></a>'
 		li.className = "time-li";
 	}
@@ -100,75 +77,163 @@ function createButton(qdr, tbs, text) {
 	return li;
 }
 
-function insertNewButtons() {
-	const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2"];
-	const strings = ["All", "1h", "1d", "7d", "1m", "6m", "1y", "2y"];
-	let tbs = getParameterByName("tbs");
-	let sbd = null;
-	if(tbs && tbs.includes("sbd:1")) {
-		let part1 = tbs.split(",")[0];
-		let part2 = tbs.split(",")[1];
-		if(part1.includes("qdr")) { //qdr and sbd can come in different orders..
-			tbs = part1;
-			sbd = part2;
-		} else {
-			tbs = part2;
-			sbd = part1;
-		}
+function toIso8601 (date) {
+	if (!date) {
+		return ''
 	}
+
+	const parts = date.split('/')
+	let year = parts[2]
+
+	let month = parts[0]
+	if (month.length === 1) {
+		month = '0' + month
+	}
+
+	let day = parts[1]
+	if (day.length === 1) {
+		day = '0' + day
+	}
+
+	const iso8601 = `${year}-${month}-${day}`
+
+	return iso8601
+}
+
+function fromIso8601 (date) {
+	if (!date) {
+		return ''
+	}
+
+	const parts = date.split('-')
+	let year = parts[0]
+	let month = parts[1]
+	let day = parts[2]
+
+	return `${month}/${day}/${year}`
+}
+
+function insertNewButtons() {
+	const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2", "y5"];
+	const strings = ["ANY", "1H", "1D", "7D", "1M", "6M", "1Y", "2Y", "5Y"];
+
+	let tbs = getParameterByName("tbs");
 
 	var newParent = document.createElement("ul");
 	newParent.className = "time-ul hdtb-msb-vis";
 
-	//add all time buttons to the parent ul
+	// Add all time buttons to the parent ul
 	for(var i = 0; i < strings.length; i++) {
 		newParent.appendChild(createButton(qdrList[i], tbs, strings[i]));
 	}
 
-	//add Verbatim button
+	// Add custom range button
+	var customLi = document.createElement("li");
+	customLi.className = "time-li"
+
+	let customButtonText = 'RANGE'
+	let cd_min = '', cd_max = ''
+
+	// Custom range selected
+	if (tbs && tbs.includes('cdr:1')) {
+		const tbsParts = tbs.split(",")
+		
+		tbsParts.forEach(part => {
+			const subParts = part.split(':')
+			if (subParts[0] === 'cd_min') {
+				return cd_min = subParts[1]
+			}
+		})
+
+		tbsParts.forEach(part => {
+			const subParts = part.split(':')
+			if (subParts[0] === 'cd_max') {
+				return cd_max = subParts[1]
+			}
+		})
+
+		if (cd_min && cd_max) {
+			customButtonText = `${cd_min} - ${cd_max}`
+		}
+
+		else if (cd_min) {
+			customButtonText = `After ${cd_min}`
+		}
+		
+		else if (cd_max) {
+			customButtonText = `Before ${cd_max}`
+		}
+	}
+	customLi.innerHTML = `<h3 class="time-h3 ${(cd_min || cd_max) ? 'time-h3-sel' : ''}">${customButtonText}</h3>`
+
+	var customRangePopup = document.createElement("div");
+	let cd_min_iso8601 = toIso8601(cd_min)
+	let cd_max_iso8601 = toIso8601(cd_max)
+	customRangePopup.innerHTML = `<div id="custom-range-popup"> <div class="custom-range-popup-container"><label for="custom-start">From: </label><input type="date" id="custom-start" name="custom-start" value="${cd_min_iso8601}" tabindex="0"/></div> <div class="custom-range-popup-container" ><label for="custom-end">To: </label><input type="date" id="custom-end" name="custom-end" value="${cd_max_iso8601}" tabindex="1"/></div> <button id="custom-range-button" role="button" tabindex="2">Go</button> </div>`
+	
+	newParent.appendChild(customRangePopup);
+
+	waitFor('#custom-range-button').then((elem) => {
+		if (!elem) {
+			return
+		}
+		
+		elem.onclick = () => {
+			const startDate = document.getElementById('custom-start').value
+			const endDate = document.getElementById('custom-end').value
+
+			var href = new URL(location.href);
+			const params =  ['cdr:1']
+			if (startDate) {
+				params.push(`cd_min:${fromIso8601(startDate)}`)
+			}
+			if (endDate) {
+				params.push(`cd_max:${fromIso8601(endDate)}`)
+			}
+			const query = params.join(',')
+			href.searchParams.set("tbs", query);
+			const newUrl = href.toString();
+			window.location.href = newUrl
+		}
+	})
+
+	customLi.onclick = () => {
+		const currentCustomRangePopup =  document.getElementById('custom-range-popup')
+
+		if (currentCustomRangePopup.style.display !== 'flex') {
+			currentCustomRangePopup.style.display = 'flex'
+		} else {
+			currentCustomRangePopup.style.display = 'none'
+		}
+	}
+	newParent.appendChild(customLi);
+
+	// Add Verbatim button
 	var verbatim = document.createElement("li");
 	verbatim.style.cssFloat = "right";
 	verbatim.style.marginLeft = "10px";
-	//if verbatim selected
+
+	// If verbatim selected
 	if(tbs == "li:1") {
-		var newUrl = addTbsParameter("qdr", null);
-		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3-sel">Verbatim</h3></a>'
+		var newUrl = setTbsParameter("qdr", null);
+		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3 time-h3-sel">Verbatim</h3></a>'
 		verbatim.className = "time-li time-li-sel";
 		verbatim.id = "li_1";
 	} else { //verbatim not selected
-		var newUrl = addTbsParameter("li", 1);
+		var newUrl = setTbsParameter("li", 1);
 		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">Verbatim</h3></a>'
 		verbatim.className = "time-li";
 		verbatim.id = "li_";
 	}
 	newParent.appendChild(verbatim);
 
-	//add search by date button
-	if(tbs && tbs.includes("qdr")) {
-		var searchByDate = document.createElement("li");
-		searchByDate.style.cssFloat = "right";
-		//sbd selected
-		if (sbd) {
-			var newUrl = addTbsParameter("qdr", null);
-			searchByDate.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3-sel">By Date</h3></a>'
-			searchByDate.className = "time-li time-li-sel";
-			searchByDate.id = "sbd_1";
-		} else { //sbd not selected
-			var newUrl = addTbsParameter("sbd", 1);
-			searchByDate.innerHTML = '<a class="q qs" href="' + newUrl + '"><h3 class="time-h3">By Date</h3></a>'
-			searchByDate.className = "time-li";
-			searchByDate.id = "sbd_";
-		}
-		newParent.appendChild(searchByDate);
-	}
 
-	
 	var resultStats = document.getElementById("result-stats");
 	if (resultStats) {
-		resultStats.id = "whyareyoureadingthismess";
+		resultStats.id = "new-resultstats";
 		resultStats.style.float = "right";
 		resultStats.style.marginRight = "16px";
-		resultStats.style.paddingTop = "1px";
+		resultStats.style.paddingTop = "3px";
 		resultStats.style.color = "rgb(119, 119, 119)";
 		resultStats.setAttribute('title', resultStats.innerText);
 		resultStats.innerText = `~ ${getResultsAmount(resultStats.innerText)}`;
@@ -185,6 +250,14 @@ function modifyOtherElements() {
 	removeElement("slim_appbar");
 	changeElementStyle(document.getElementById("botabar"), "paddingBottom", 0);
 	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
+	
+	changeElementStyle(document.getElementById("extabar"), "height", "43px");
+
+	const hdtbMenus = document.getElementById("hdtbMenus")
+	if (hdtbMenus) {
+		hdtbMenus.style['backgroundColor'] = 'white';
+		hdtbMenus.style['paddingBottom'] = '9px';
+	}
 }
 
 function load() {
@@ -206,7 +279,17 @@ function load() {
 }
 
 const waitFor = async selector => {
-	while (!document.querySelector(selector)) {
+	let elem
+	let i = 0
+	while (true) {
+		if (++i > 10) {
+			return null
+		}
+
+		elem = document.querySelector(selector)
+		if  (!!elem) {
+			return elem
+		}
 		await new Promise(requestAnimationFrame)
 	}
 }
