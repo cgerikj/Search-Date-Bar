@@ -251,7 +251,7 @@ function modifyOtherElements() {
 	changeElementStyle(document.getElementById("botabar"), "paddingBottom", 0);
 	changeElementStyle(document.getElementsByClassName("rl_feature")[0], "marginBottom", 0);
 	
-	changeElementStyle(document.getElementById("extabar"), "height", "43px");
+	changeElementStyle(document.getElementById("extabar"), "min-height", "43px");
 
 	const hdtbMenus = document.getElementById("hdtbMenus")
 	if (hdtbMenus) {
