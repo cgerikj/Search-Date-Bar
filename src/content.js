@@ -233,14 +233,14 @@ function insertNewButtons() {
 		resultStats.id = "new-resultstats";
 		resultStats.style.float = "right";
 		resultStats.style.marginRight = "16px";
-		resultStats.style.paddingTop = "3px";
+		resultStats.style.paddingTop = "2px";
 		resultStats.style.color = "rgb(119, 119, 119)";
 		resultStats.setAttribute('title', resultStats.innerText);
 		resultStats.innerText = `~ ${getResultsAmount(resultStats.innerText)}`;
 		newParent.appendChild(resultStats);
 	}
 
-	let referenceNode = document.getElementById("extabar");
+	let referenceNode = document.getElementById("appbar");
 	if (referenceNode) {
 		referenceNode.prepend(newParent);
 	}
@@ -267,8 +267,8 @@ function load() {
 		case "nws": //News page
 		case "shop": //Shopping page
 		case "fin": //Finance page
-			changeElementStyle(document.getElementById("hdtb-tls"), "display", "inline-block");
-			changeElementStyle(document.getElementById("hdtbMenus"), "display", "block");
+			// changeElementStyle(document.getElementById("hdtb-tls"), "display", "inline-block");
+			// changeElementStyle(document.getElementById("hdtbMenus"), "display", "block");
 			break;
 
 		default: //ALL page
