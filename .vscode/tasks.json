@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Launch Chromium with extension (google.com)",
+			"type": "shell",
+			"command": "C:\\nvm4w\\nodejs\\node.exe",
+			"args": ["tests/dev-launch.js"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"detail": "Opens a real, live google.com search in Chromium with the unpacked extension loaded. Leaves the browser open for manual testing."
+		}
+	]
+}

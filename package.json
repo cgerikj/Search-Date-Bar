@@ -1,0 +1,13 @@
+{
+  "name": "search-date-bar",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Playwright test harness for the Search Date Bar Chrome extension",
+  "scripts": {
+    "test": "playwright test tests"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^26.1.1"
+  }
+}

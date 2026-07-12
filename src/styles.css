@@ -1,91 +1,170 @@
-#hdtb-tls {
-	display:none;
+
+/* content.js sets this class at document_start so the space exists before first paint (zero CLS). */
+html.sdb-reserve-space #center_col {
+	position: relative;
+	padding-top: 20px;
 }
 
-#hdtbMenus {
-	display:none;
-}
-
-#resultStats {
-	display:none;
+html.sdb-reserve-space #center_col > .time-ul {
+	position: absolute;
+	top: -16px;
+	left: 0;
+	right: 0;
 }
 
 .time-ul {
 	list-style-type: none;
 	margin:0px;
-	padding:0px;
-	padding: 8px 0px 7px 0px;
+	padding: 2px 0px 2px 0px;
 	margin-bottom: 4px;
-	overflow: hidden;
-	text-align: center;
-	width: 663px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+	width: auto;
 }
 
 .time-li {
-	margin: 0px 4px 0px 4px;
-	padding-bottom: 2px;
-	float: left;
+	margin: 0;
 	text-align: center;
-	display: inline;
 	min-width: 18px;
 }
 
-.time-li-sel {
-	border-bottom: 2px solid #1a73e8;
+.time-li-range {
+	position: relative;
+}
+
+/* Divider: verbatim is a separate toggle, not part of the time-range set. */
+.time-li-verbatim {
+	padding-left: 6px;
+	border-left: 1px solid #dadce0;
+}
+
+html.sdb-dark .time-li-verbatim {
+	border-left-color: #5f6368;
 }
 
 .time-li a {
-	margin:0px auto;
 	display: block;
-	color: #fafafa;
-	text-align: center;
 	text-decoration: none;
 }
 
 .time-h3 {
-	color: #777;
+	color: #3c4043;
 	text-decoration: none;
 	font-family: "Google Sans", arial, sans-serif;
-	font-size: 16px;
+	font-size: 12px;
+	font-weight: 500;
 	cursor: pointer;
+	display: block;
+	white-space: nowrap;
+	padding: 4px 8px;
+	border-radius: 100px;
+	border: 1px solid #dadce0;
 }
 
 .time-h3:hover {
-	color: #333333;
+	background-color: #f1f3f4;
 }
 
 .time-h3-sel {
 	color: #1a73e8;
+	background-color: #e8f0fe;
+	border-color: #e8f0fe;
 }
 
 .time-h3-sel:hover {
-	color: #1a73e8;
+	background-color: #d2e3fc;
+}
+
+/* html.sdb-dark, not prefers-color-scheme: the OS setting doesn't always match Google's actual theme. */
+html.sdb-dark .time-h3 {
+	color: #9aa0a6;
+	border-color: #5f6368;
+}
+
+html.sdb-dark .time-h3:hover {
+	background-color: #3c4043;
+}
+
+html.sdb-dark .time-h3-sel {
+	color: #8ab4f8;
+	background-color: rgba(138, 180, 248, 0.16);
+	border-color: transparent;
+}
+
+html.sdb-dark .time-h3-sel:hover {
+	background-color: rgba(138, 180, 248, 0.24);
 }
 
 #custom-range-popup {
 	display: none;
 	position: absolute;
-	background-color: white;
-	border: 1px solid #cecece;
-	margin-top: 28px;
-	margin-left: 259px;
+	top: 100%;
+	left: 0;
+	background-color: #ffffff;
+	margin-top: 6px;
 	z-index: 10;
 	flex-direction: column;
-	gap: 5px;
+	gap: 6px;
 	padding: 10px;
 	align-items: flex-start;
-	border-radius: 3px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,0.17);
+	border-radius: 8px;
+	box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15);
 }
 
 .custom-range-popup-container {
-	width: 190px;
+	width: 170px;
 	display: flex;
 	gap: 4px;
 	justify-content: flex-end;
 	align-items: center;
 }
 
+.custom-range-popup-container input[type="date"] {
+	font-family: "Google Sans", arial, sans-serif;
+	font-size: 13px;
+	color: #3c4043;
+	background-color: #ffffff;
+	border: 1px solid #dadce0;
+	border-radius: 4px;
+	padding: 3px 5px;
+}
+
 #custom-range-button {
 	width: 100%;
+	font-family: "Google Sans", arial, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	color: #ffffff;
+	background-color: #1a73e8;
+	border: none;
+	border-radius: 100px;
+	padding: 5px 0;
+	cursor: pointer;
+}
+
+#custom-range-button:hover {
+	background-color: #1765cc;
+}
+
+html.sdb-dark #custom-range-popup {
+	background-color: #303134;
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,.5), 0 2px 6px 2px rgba(0,0,0,.3);
+}
+
+html.sdb-dark .custom-range-popup-container input[type="date"] {
+	color: #e8eaed;
+	background-color: #303134;
+	border-color: #5f6368;
+	color-scheme: dark;
+}
+
+html.sdb-dark #custom-range-button {
+	color: #202124;
+	background-color: #8ab4f8;
+}
+
+html.sdb-dark #custom-range-button:hover {
+	background-color: #a8c7fa;
 }
