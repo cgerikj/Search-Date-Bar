@@ -5,11 +5,13 @@
   "description": "Playwright test harness for the Search Date Bar Chrome extension",
   "scripts": {
     "test": "playwright test tests",
-    "release": "node scripts/release.js"
+    "release": "node scripts/release.js",
+    "generate-icon": "node scripts/generate-icon.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "@types/node": "^26.1.1",
-    "archiver": "^6.0.2"
+    "archiver": "^6.0.2",
+    "sharp": "^0.35.3"
   }
 }

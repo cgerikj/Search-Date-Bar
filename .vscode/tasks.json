@@ -12,6 +12,18 @@
 				"panel": "dedicated"
 			},
 			"detail": "Opens a real, live google.com search in Chromium with the unpacked extension loaded. Leaves the browser open for manual testing."
+		},
+		{
+			"label": "Generate extension icon",
+			"type": "shell",
+			"command": "C:\\nvm4w\\nodejs\\node.exe",
+			"args": ["scripts/generate-icon.js"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"detail": "Regenerates src/icons/icon{16,32,48,128}.png from scripts/generate-icon.js."
 		}
 	]
 }
