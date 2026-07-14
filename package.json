@@ -7,7 +7,8 @@
     "test": "playwright test tests",
     "release": "node scripts/release.js",
     "generate-icon": "node scripts/generate-icon.js",
-    "generate-screenshots": "node scripts/generate-screenshots.js"
+    "generate-screenshots": "node scripts/generate-screenshots.js",
+    "generate-banners": "node scripts/generate-banners.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",

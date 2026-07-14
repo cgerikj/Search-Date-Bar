@@ -36,6 +36,18 @@
 				"panel": "dedicated"
 			},
 			"detail": "Regenerates screenshots/*.png from scripts/generate-screenshots.js. Pass a filename substring as an arg to run just one entry."
+		},
+		{
+			"label": "Generate store banners",
+			"type": "shell",
+			"command": "C:\\nvm4w\\nodejs\\node.exe",
+			"args": ["scripts/generate-banners.js"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"detail": "Regenerates assets/banner1.png (marquee) and assets/banner3.png (small tile) from scripts/generate-banners.js."
 		}
 	]
 }
