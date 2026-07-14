@@ -24,6 +24,18 @@
 				"panel": "dedicated"
 			},
 			"detail": "Regenerates src/icons/icon{16,32,48,128}.png from scripts/generate-icon.js."
+		},
+		{
+			"label": "Generate store screenshots",
+			"type": "shell",
+			"command": "C:\\nvm4w\\nodejs\\node.exe",
+			"args": ["scripts/generate-screenshots.js"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"detail": "Regenerates screenshots/*.png from scripts/generate-screenshots.js. Pass a filename substring as an arg to run just one entry."
 		}
 	]
 }
