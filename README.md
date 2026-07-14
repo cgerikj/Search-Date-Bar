@@ -2,7 +2,7 @@
 
 A Chrome extension that puts Google's date filter (Past hour, Past day, Past week...) in a single row right under the search box, instead of buried in the Tools dropdown — plus ranges Google doesn't offer at all (6 months, 2 years, 5 years) and a custom date-range picker.
 
-![Search Date Bar in action](screenshots/img.png)
+![Search Date Bar in action](screenshots/img1_ranges.png)
 
 ## Install
 

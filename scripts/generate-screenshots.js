@@ -12,6 +12,9 @@ const {
 const PROFILE_DIR = path.join(os.tmpdir(), 'sdb-fresh-profile');
 const SRC_DIR = path.resolve(__dirname, '../src');
 const OUT_DIR = path.resolve(__dirname, '../screenshots');
+const ICON = `data:image/png;base64,${require('fs').readFileSync(path.resolve(__dirname, '../src/icons/icon128.png')).toString('base64')}`;
+const FONT = `'Segoe UI', 'Helvetica Neue', Arial, sans-serif`;
+const PALETTE = { red: '#cf564a', amber: '#cf953e', teal: '#3fa79e', blue: '#4a72c2' };
 
 // Google's dark/light rendering comes from a stored per-profile preference,
 // not prefers-color-scheme, and is inconsistent across identical runs on
@@ -26,15 +29,15 @@ async function isPageDark(page) {
 	});
 }
 
-async function forceLightThemeIfDark(page, url) {
-	for (let attempt = 0; attempt < 3 && (await isPageDark(page)); attempt++) {
-		console.log(`  [theme] page is dark, reloading (attempt ${attempt + 1}/3)...`);
+async function forceThemeIfWrong(page, url, wantDark, maxAttempts = 8) {
+	for (let attempt = 0; attempt < maxAttempts && (await isPageDark(page)) !== wantDark; attempt++) {
+		console.log(`  [theme] page is ${wantDark ? 'light' : 'dark'}, reloading for ${wantDark ? 'dark' : 'light'} (attempt ${attempt + 1}/${maxAttempts})...`);
 		await page.goto(url);
 		await page.waitForLoadState('networkidle').catch(() => {});
 		await page.waitForTimeout(500);
 	}
-	if (await isPageDark(page)) {
-		console.log('  [theme] still dark after retries — proceeding anyway.');
+	if ((await isPageDark(page)) !== wantDark) {
+		console.log(`  [theme] still ${wantDark ? 'light' : 'dark'} after retries — proceeding anyway.`);
 	}
 }
 
@@ -111,9 +114,43 @@ function arrowSvg({ height, color, strokeColor }) {
 	</svg>`;
 }
 
+// Wraps the raw captured screenshot in a marketing card: light gradient
+// background, benefit headline (**phrase** renders as a gradient accent),
+// small icon + feature label, screenshot in a shadowed white card. Scales
+// off a 1280-wide reference layout so 640-wide output stays proportional.
+function marketingCardHtml({ width, height, headline, featureLabel, screenshotDataUri }) {
+	const scale = width / 1280;
+	const px = (n) => Math.round(n * scale);
+	const headlineHtml = headline.replace(
+		/\*\*(.+?)\*\*/,
+		(_, phrase) => `<span style="background:linear-gradient(90deg, ${PALETTE.teal}, ${PALETTE.blue});-webkit-background-clip:text;background-clip:text;color:transparent;">${phrase}</span>`
+	);
+	return `<!doctype html><html><head><style>
+		*{margin:0;padding:0;box-sizing:border-box;}
+		body{width:${width}px;height:${height}px;font-family:${FONT};overflow:hidden;position:relative;
+			background:linear-gradient(135deg, #ffffff 0%, #eef7f6 45%, #eef1fb 100%);}
+	</style></head><body>
+		<div style="position:absolute;left:-10%;top:-20%;width:${px(500)}px;height:${px(500)}px;border-radius:50%;
+			background:radial-gradient(circle, rgba(63,167,158,0.16) 0%, rgba(63,167,158,0) 70%);"></div>
+		<div style="position:absolute;right:-10%;bottom:-25%;width:${px(500)}px;height:${px(500)}px;border-radius:50%;
+			background:radial-gradient(circle, rgba(207,149,62,0.14) 0%, rgba(207,149,62,0) 70%);"></div>
+		<div style="position:relative;height:100%;display:flex;flex-direction:column;align-items:center;padding:${px(36)}px ${px(60)}px ${px(30)}px;">
+			<div style="font-size:${px(34)}px;font-weight:800;color:#1a1f26;text-align:center;line-height:1.22;letter-spacing:-0.3px;max-width:${px(1000)}px;">${headlineHtml}</div>
+			<div style="display:flex;align-items:center;gap:${px(10)}px;margin-top:${px(14)}px;margin-bottom:${px(22)}px;">
+				<img src="${ICON}" style="width:${px(22)}px;height:${px(22)}px;border-radius:${px(5)}px;">
+				<div style="font-size:${px(16)}px;font-weight:600;color:#5b6270;letter-spacing:0.3px;">${featureLabel}</div>
+			</div>
+			<div style="flex:1;width:100%;display:flex;align-items:center;justify-content:center;min-height:0;">
+				<img src="${screenshotDataUri}" style="max-width:100%;max-height:100%;object-fit:contain;
+					border-radius:${px(14)}px;box-shadow:0 ${px(20)}px ${px(45)}px rgba(30,40,50,0.16);border:1px solid #e4e5e2;">
+			</div>
+		</div>
+	</body></html>`;
+}
+
 const SCREENSHOTS = [
 	{
-		name: 'img.png',
+		name: 'img1_ranges.png',
 		query: 'chrome extensions',
 		// Google's layout has a fixed max-width, so a wider viewport just adds
 		// empty space rather than zooming. Real zoom: capture at 2x pixel
@@ -128,9 +165,11 @@ const SCREENSHOTS = [
 		arrowTarget: '#qdr_m6',
 		arrowGap: 12,
 		arrow: { height: 190, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		headline: "Ranges Google's own filter **doesn't have**",
+		featureLabel: '6 months · 2 years · 5 years',
 	},
 	{
-		name: 'img2.png',
+		name: 'img2_verbatim.png',
 		query: 'chrome extensions',
 		captureViewport: { width: 1280, height: 800 },
 		deviceScaleFactor: 2,
@@ -140,60 +179,48 @@ const SCREENSHOTS = [
 		arrowTarget: '.time-li-verbatim',
 		arrowGap: 12,
 		arrow: { height: 220, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		headline: 'Exact-match search, **one click away**',
+		featureLabel: 'Verbatim toggle',
 	},
 	{
-		name: 'img1_640.png',
-		query: 'google',
-		captureViewport: { width: 1280, height: 800 },
-		deviceScaleFactor: 2,
-		crop: { left: 0, top: 0, width: 1300, height: 812 },
-		outputSize: { width: 640, height: 400 },
-		arrowTarget: '#qdr_m',
-		arrowGap: 10,
-		arrow: { height: 90, color: '#4CAF50', strokeColor: '#8fbf5f' },
-	},
-	{
-		name: 'img3_640.png',
+		name: 'img3_rangepicker.png',
 		query: 'reddit',
+		// CWS downscales every screenshot to 640x400 for display regardless of
+		// upload size, so a native 1280x800 source is strictly sharper.
 		captureViewport: { width: 1280, height: 800 },
 		deviceScaleFactor: 2,
-		// Original pointed at "By Date", since removed — "Range" is its
-		// real current replacement.
 		forceSelectChipId: 'qdr_w',
-		crop: { left: 0, top: 0, width: 1300, height: 812 },
-		outputSize: { width: 640, height: 400 },
-		arrowTarget: '.time-li-range',
-		arrowGap: 10,
-		arrow: { height: 90, color: '#4CAF50', strokeColor: '#8fbf5f' },
-	},
-	{
-		name: 'img3_small.png',
-		query: 'reddit',
-		// img3_640.png already shows the Range chip — show the popup open
-		// instead of repeating that shot at a smaller size.
-		captureViewport: { width: 1280, height: 800 },
-		deviceScaleFactor: 2,
+		// Shows the popup actually open (real proof of the headline claim)
+		// instead of just an arrow pointing at the closed "Range" chip.
 		interact: async (page) => {
 			await page.click('.time-li-range');
 			await page.waitForSelector('#custom-range-popup', { state: 'visible' });
 			await page.fill('#custom-start', '2026-06-01');
 			await page.fill('#custom-end', '2026-06-30');
+			// .fill() leaves the last-edited date segment focused/highlighted —
+			// blur so the screenshot doesn't show a selected "2026" year.
+			await page.locator('#custom-end').evaluate((el) => el.blur());
 			await page.waitForTimeout(200);
 		},
-		crop: { left: 0, top: 0, width: 1350, height: 859 },
-		outputSize: { width: 440, height: 280 },
+		crop: { left: 0, top: 0, width: 1550, height: 969 },
+		outputSize: { width: 1280, height: 800 },
+		headline: 'Plus a **real custom date-range picker**',
+		featureLabel: 'Custom Range',
 	},
 	{
-		name: 'img_small.png',
-		query: 'chrome extensions',
+		name: 'img4_darkmode.png',
+		query: 'google',
 		captureViewport: { width: 1280, height: 800 },
 		deviceScaleFactor: 2,
-		forceSelectChipId: 'qdr_m6',
-		arrowTarget: '#qdr_m6',
-		arrowGap: 8,
-		arrow: { height: 70, color: '#4CAF50', strokeColor: '#8fbf5f' },
-		crop: { left: 0, top: 0, width: 1100, height: 700 },
-		outputSize: { width: 440, height: 280 },
+		theme: 'dark',
+		forceSelectChipId: 'qdr_m',
+		crop: { left: 0, top: 0, width: 1550, height: 969 },
+		outputSize: { width: 1280, height: 800 },
+		arrowTarget: '#qdr_m',
+		arrowGap: 12,
+		arrow: { height: 190, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		headline: "Matches Google's dark theme **automatically**",
+		featureLabel: 'Light & dark, seamlessly',
 	},
 ];
 
@@ -205,16 +232,22 @@ const SCREENSHOTS = [
 		process.exit(1);
 	}
 
+	// Separate standalone browser for compositing the marketing card — the
+	// live-capture context above is closed per spec (fresh profile state),
+	// but the card render is just static HTML and can share one instance.
+	const composeBrowser = await chromium.launch();
+
 	for (const spec of toRun) {
+		const colorScheme = spec.theme === 'dark' ? 'dark' : 'light';
 		const context = await chromium.launchPersistentContext(PROFILE_DIR, {
 			headless: false,
 			viewport: spec.captureViewport,
 			deviceScaleFactor: spec.deviceScaleFactor || 1,
-			colorScheme: 'light',
+			colorScheme,
 			args: [`--disable-extensions-except=${SRC_DIR}`, `--load-extension=${SRC_DIR}`],
 		});
 		const page = context.pages()[0] ?? (await context.newPage());
-		await page.emulateMedia({ colorScheme: 'light' });
+		await page.emulateMedia({ colorScheme });
 
 		const url = `https://www.google.com/search?q=${encodeURIComponent(spec.query)}&hl=en&gl=us`;
 		await page.goto(url);
@@ -224,7 +257,7 @@ const SCREENSHOTS = [
 		await page.waitForTimeout(700);
 		await waitForHumanIfCaptcha(page);
 		await dismissConsentIfPresent(page);
-		await forceLightThemeIfDark(page, url);
+		await forceThemeIfWrong(page, url, spec.theme === 'dark');
 		await replaceDoodleLogoIfPresent(page);
 
 		if (spec.interact) {
@@ -287,8 +320,29 @@ const SCREENSHOTS = [
 				.toBuffer();
 		}
 
+		if (spec.headline) {
+			const cardHtml = marketingCardHtml({
+				width: spec.outputSize.width,
+				height: spec.outputSize.height,
+				headline: spec.headline,
+				featureLabel: spec.featureLabel,
+				screenshotDataUri: `data:image/png;base64,${outBuf.toString('base64')}`,
+			});
+			const composePage = await composeBrowser.newPage({
+				viewport: { width: spec.outputSize.width, height: spec.outputSize.height },
+				deviceScaleFactor: 2,
+			});
+			await composePage.setContent(cardHtml);
+			await composePage.waitForTimeout(150);
+			const cardRaw = await composePage.screenshot();
+			await composePage.close();
+			outBuf = await sharp(cardRaw).resize(spec.outputSize.width, spec.outputSize.height).png().toBuffer();
+		}
+
 		const outPath = path.join(OUT_DIR, spec.name);
 		await sharp(outBuf).toFile(outPath);
 		console.log(`Wrote ${outPath}`);
 	}
+
+	await composeBrowser.close();
 })();
