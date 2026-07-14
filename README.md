@@ -15,6 +15,7 @@ Google's own date filter takes two clicks to reach (Tools → Any time) and tops
 ## Features
 
 - One-click ranges: Any time, 1h, 1d, 7d, 1m, 6m, 1y, 2y, 5y
+- Works on Images, Videos, News, Short videos, and Books, not just the main results page
 - Custom date range, with a native date picker
 - Verbatim toggle — exact words, no spelling correction or synonyms
 - Matches Google's own light/dark theme automatically

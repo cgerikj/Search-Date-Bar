@@ -263,7 +263,10 @@ function insertNewButtons() {
 		verbatim.className = "time-li time-li-verbatim";
 		verbatim.id = "li_";
 	}
-	newParent.appendChild(verbatim);
+	// Verbatim (li:1) doesn't apply on Images.
+	if (getParameterByName("udm") !== "2") {
+		newParent.appendChild(verbatim);
+	}
 
 	// #appbar is a fallback if #center_col (the real results column) is ever missing.
 	let referenceNode = document.getElementById("center_col") || document.getElementById("appbar");
@@ -286,14 +289,18 @@ function modifyOtherElements() {
 	}
 }
 
-// Some verticals (e.g. Images) now use udm instead of tbm.
-const isSpecialPage = ["vid", "isch", "nws", "shop", "fin"].includes(getParameterByName("tbm"))
-	|| !!getParameterByName("udm");
+// Images (udm=2), Videos (udm=7), News (tbm=nws), Short videos (udm=39), and
+// Books (udm=36) have their own real qdr/cdr date-range support — the rest
+// (Shopping, Finance, AI Mode, etc.) still bail out.
+const SUPPORTED_VERTICAL_UDM = ["2", "7", "39", "36"];
+const isSupportedVertical = getParameterByName("tbm") === "nws" || SUPPORTED_VERTICAL_UDM.includes(getParameterByName("udm"));
+const isSpecialPage = (["vid", "isch", "nws", "shop", "fin"].includes(getParameterByName("tbm"))
+	|| !!getParameterByName("udm")) && !isSupportedVertical;
 
 // Reserve space before Google's first paint (see styles.css) so inserting the bar later causes zero layout shift.
-if (!isSpecialPage) {
-	document.documentElement.classList.add("sdb-reserve-space");
-}
+// Images needs a different reserved offset (see styles.css) since its own
+// related-searches row sits directly above #center_col.
+document.documentElement.classList.add(getParameterByName("udm") === "2" ? "sdb-reserve-space-inset" : "sdb-reserve-space");
 
 function load() {
 	switch(true) {

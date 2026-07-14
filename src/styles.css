@@ -12,6 +12,20 @@ html.sdb-reserve-space #center_col > .time-ul {
 	right: 0;
 }
 
+/* Images has a related-searches row directly above #center_col — floating
+   above the box like the default trick does would overlap it. */
+html.sdb-reserve-space-inset #center_col {
+	position: relative;
+	padding-top: 44px;
+}
+
+html.sdb-reserve-space-inset #center_col > .time-ul {
+	position: absolute;
+	top: 6px;
+	left: 0;
+	right: 0;
+}
+
 .time-ul {
 	list-style-type: none;
 	margin:0px;
