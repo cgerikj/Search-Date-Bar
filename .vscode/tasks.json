@@ -48,6 +48,18 @@
 				"panel": "dedicated"
 			},
 			"detail": "Regenerates assets/banner1.png (marquee) and assets/banner3.png (small tile) from scripts/generate-banners.js."
+		},
+		{
+			"label": "Build release zip",
+			"type": "shell",
+			"command": "C:\\nvm4w\\nodejs\\node.exe",
+			"args": ["scripts/release.js"],
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"detail": "Zips src/ to release/google-search-by-date-v{version}.zip for Chrome Web Store upload. Bump manifest version first — it won't overwrite an existing zip."
 		}
 	]
 }
