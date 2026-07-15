@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Google 日付検索 – 日付フィルタとカスタム期間"
+	},
+	"extDescription": {
+		"message": "Google 検索を日付・時間で絞り込み – ウェブ、画像、動画、ニュース。3/6か月、3年、今週/今月/今年、カスタム期間に対応。"
+	},
+	"anyTime": {
+		"message": "期間指定なし"
+	},
+	"tipPastHour": {
+		"message": "1時間以内"
+	},
+	"tipPastDay": {
+		"message": "24時間以内"
+	},
+	"tipPastWeek": {
+		"message": "1週間以内"
+	},
+	"tipPastMonth": {
+		"message": "1か月以内"
+	},
+	"tipPast3Months": {
+		"message": "3か月以内"
+	},
+	"tipPast6Months": {
+		"message": "6か月以内"
+	},
+	"tipPastYear": {
+		"message": "1年以内"
+	},
+	"tipPast3Years": {
+		"message": "3年以内"
+	},
+	"abbrHour": {
+		"message": "1時間"
+	},
+	"abbrDay": {
+		"message": "24時間"
+	},
+	"abbrWeek": {
+		"message": "7日"
+	},
+	"abbrMonth": {
+		"message": "1か月"
+	},
+	"abbr3Months": {
+		"message": "3か月"
+	},
+	"abbr6Months": {
+		"message": "6か月"
+	},
+	"abbrYear": {
+		"message": "1年"
+	},
+	"abbr3Years": {
+		"message": "3年"
+	},
+	"thisWeek": {
+		"message": "今週"
+	},
+	"thisMonth": {
+		"message": "今月"
+	},
+	"thisQuarter": {
+		"message": "今四半期"
+	},
+	"thisYear": {
+		"message": "今年"
+	},
+	"range": {
+		"message": "期間"
+	},
+	"afterDate": {
+		"message": "$date$ 以降",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "$date$ 以前",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "完全一致"
+	},
+	"verbatimTip": {
+		"message": "スペル修正や類義語を使わず、入力した語句のとおりに検索します"
+	},
+	"resultCountTip": {
+		"message": "おおよその検索結果件数"
+	}
+}

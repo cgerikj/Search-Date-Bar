@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Google-Suche nach Datum – Datumsfilter & Zeiträume"
+	},
+	"extDescription": {
+		"message": "Nach Datum & Zeit filtern – Web, Bilder, Videos, News. 3/6 Monate, 3 Jahre, diese Woche/Monat/Jahr & eigene Zeiträume."
+	},
+	"anyTime": {
+		"message": "Jederzeit"
+	},
+	"tipPastHour": {
+		"message": "Letzte Stunde"
+	},
+	"tipPastDay": {
+		"message": "Letzte 24 Stunden"
+	},
+	"tipPastWeek": {
+		"message": "Letzte Woche"
+	},
+	"tipPastMonth": {
+		"message": "Letzter Monat"
+	},
+	"tipPast3Months": {
+		"message": "Letzte 3 Monate"
+	},
+	"tipPast6Months": {
+		"message": "Letzte 6 Monate"
+	},
+	"tipPastYear": {
+		"message": "Letztes Jahr"
+	},
+	"tipPast3Years": {
+		"message": "Letzte 3 Jahre"
+	},
+	"abbrHour": {
+		"message": "1 Std"
+	},
+	"abbrDay": {
+		"message": "1T"
+	},
+	"abbrWeek": {
+		"message": "1W"
+	},
+	"abbrMonth": {
+		"message": "1M"
+	},
+	"abbr3Months": {
+		"message": "3M"
+	},
+	"abbr6Months": {
+		"message": "6M"
+	},
+	"abbrYear": {
+		"message": "1J"
+	},
+	"abbr3Years": {
+		"message": "3J"
+	},
+	"thisWeek": {
+		"message": "Diese Woche"
+	},
+	"thisMonth": {
+		"message": "Dieser Monat"
+	},
+	"thisQuarter": {
+		"message": "Dieses Quartal"
+	},
+	"thisYear": {
+		"message": "Dieses Jahr"
+	},
+	"range": {
+		"message": "Zeitraum"
+	},
+	"afterDate": {
+		"message": "Nach $date$",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "Vor $date$",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "Wörtlich"
+	},
+	"verbatimTip": {
+		"message": "Mit exakt Ihren Wörtern suchen, ohne Rechtschreibkorrektur oder Synonyme"
+	},
+	"resultCountTip": {
+		"message": "Ungefähre Anzahl der Ergebnisse"
+	}
+}

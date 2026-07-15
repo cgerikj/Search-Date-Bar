@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Google 依日期搜尋 – 日期篩選列與自訂時間範圍"
+	},
+	"extDescription": {
+		"message": "依日期和時間篩選 Google 搜尋 – 網頁、圖片、影片、新聞。3/6 個月、3 年、本週/本月/今年、自訂範圍。"
+	},
+	"anyTime": {
+		"message": "不限時間"
+	},
+	"tipPastHour": {
+		"message": "過去 1 小時"
+	},
+	"tipPastDay": {
+		"message": "過去 24 小時"
+	},
+	"tipPastWeek": {
+		"message": "過去 1 週"
+	},
+	"tipPastMonth": {
+		"message": "過去 1 個月"
+	},
+	"tipPast3Months": {
+		"message": "過去 3 個月"
+	},
+	"tipPast6Months": {
+		"message": "過去 6 個月"
+	},
+	"tipPastYear": {
+		"message": "過去 1 年"
+	},
+	"tipPast3Years": {
+		"message": "過去 3 年"
+	},
+	"abbrHour": {
+		"message": "1小時"
+	},
+	"abbrDay": {
+		"message": "1天"
+	},
+	"abbrWeek": {
+		"message": "7天"
+	},
+	"abbrMonth": {
+		"message": "1個月"
+	},
+	"abbr3Months": {
+		"message": "3個月"
+	},
+	"abbr6Months": {
+		"message": "6個月"
+	},
+	"abbrYear": {
+		"message": "1年"
+	},
+	"abbr3Years": {
+		"message": "3年"
+	},
+	"thisWeek": {
+		"message": "本週"
+	},
+	"thisMonth": {
+		"message": "本月"
+	},
+	"thisQuarter": {
+		"message": "本季"
+	},
+	"thisYear": {
+		"message": "今年"
+	},
+	"range": {
+		"message": "時間範圍"
+	},
+	"afterDate": {
+		"message": "$date$ 之後",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "$date$ 之前",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "完全比對"
+	},
+	"verbatimTip": {
+		"message": "依您輸入的字詞精確搜尋，不進行拼字校正或同義詞替換"
+	},
+	"resultCountTip": {
+		"message": "搜尋結果的大約數量"
+	}
+}

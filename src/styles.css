@@ -1,14 +1,15 @@
 
 /* content.js sets this class at document_start so the space exists before first paint (zero CLS).
-   Sized for the wrapper's two stacked rows (~28.7px each + 4px gap between them). */
+   Sized for the wrapper's two stacked rows (~28.7px each + 4px gap between them),
+   plus ~8px breathing room above the bar. */
 html.sdb-reserve-space #center_col {
 	position: relative;
-	padding-top: 53px;
+	padding-top: 61px;
 }
 
 html.sdb-reserve-space #center_col > .sdb-bar-wrapper {
 	position: absolute;
-	top: -16px;
+	top: -8px;
 	left: 0;
 	right: 0;
 }
@@ -41,12 +42,12 @@ html.sdb-dark .sdb-bar-wrapper::-webkit-scrollbar-thumb {
    above the box like the default trick does would overlap it. */
 html.sdb-reserve-space-inset #center_col {
 	position: relative;
-	padding-top: 77px;
+	padding-top: 85px;
 }
 
 html.sdb-reserve-space-inset #center_col > .sdb-bar-wrapper {
 	position: absolute;
-	top: 6px;
+	top: 14px;
 	left: 0;
 	right: 0;
 }

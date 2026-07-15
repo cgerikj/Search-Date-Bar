@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Google 날짜 검색 – 날짜 필터 및 맞춤 기간"
+	},
+	"extDescription": {
+		"message": "Google 검색을 날짜·시간으로 필터링 – 웹, 이미지, 동영상, 뉴스. 3/6개월, 3년, 이번 주/달/해, 맞춤 기간 지원."
+	},
+	"anyTime": {
+		"message": "전체 기간"
+	},
+	"tipPastHour": {
+		"message": "1시간 이내"
+	},
+	"tipPastDay": {
+		"message": "24시간 이내"
+	},
+	"tipPastWeek": {
+		"message": "1주 이내"
+	},
+	"tipPastMonth": {
+		"message": "1개월 이내"
+	},
+	"tipPast3Months": {
+		"message": "3개월 이내"
+	},
+	"tipPast6Months": {
+		"message": "6개월 이내"
+	},
+	"tipPastYear": {
+		"message": "1년 이내"
+	},
+	"tipPast3Years": {
+		"message": "3년 이내"
+	},
+	"abbrHour": {
+		"message": "1시간"
+	},
+	"abbrDay": {
+		"message": "1일"
+	},
+	"abbrWeek": {
+		"message": "1주"
+	},
+	"abbrMonth": {
+		"message": "1개월"
+	},
+	"abbr3Months": {
+		"message": "3개월"
+	},
+	"abbr6Months": {
+		"message": "6개월"
+	},
+	"abbrYear": {
+		"message": "1년"
+	},
+	"abbr3Years": {
+		"message": "3년"
+	},
+	"thisWeek": {
+		"message": "이번 주"
+	},
+	"thisMonth": {
+		"message": "이번 달"
+	},
+	"thisQuarter": {
+		"message": "이번 분기"
+	},
+	"thisYear": {
+		"message": "올해"
+	},
+	"range": {
+		"message": "기간"
+	},
+	"afterDate": {
+		"message": "$date$ 이후",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "$date$ 이전",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "정확히 일치"
+	},
+	"verbatimTip": {
+		"message": "맞춤법 교정이나 유의어 없이 입력한 단어 그대로 검색합니다"
+	},
+	"resultCountTip": {
+		"message": "대략적인 검색결과 수"
+	}
+}

@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Google Search by Date – Date Filter Bar with Custom Ranges"
+	},
+	"extDescription": {
+		"message": "Filter Google search by date & time — on web, Images, Videos & News. 3/6 months, 3 years, this week/month/year, custom ranges."
+	},
+	"anyTime": {
+		"message": "Any time"
+	},
+	"tipPastHour": {
+		"message": "Past hour"
+	},
+	"tipPastDay": {
+		"message": "Past day"
+	},
+	"tipPastWeek": {
+		"message": "Past week"
+	},
+	"tipPastMonth": {
+		"message": "Past month"
+	},
+	"tipPast3Months": {
+		"message": "Past 3 months"
+	},
+	"tipPast6Months": {
+		"message": "Past 6 months"
+	},
+	"tipPastYear": {
+		"message": "Past year"
+	},
+	"tipPast3Years": {
+		"message": "Past 3 years"
+	},
+	"abbrHour": {
+		"message": "1h"
+	},
+	"abbrDay": {
+		"message": "1d"
+	},
+	"abbrWeek": {
+		"message": "7d"
+	},
+	"abbrMonth": {
+		"message": "1mo"
+	},
+	"abbr3Months": {
+		"message": "3mo"
+	},
+	"abbr6Months": {
+		"message": "6mo"
+	},
+	"abbrYear": {
+		"message": "1yr"
+	},
+	"abbr3Years": {
+		"message": "3yr"
+	},
+	"thisWeek": {
+		"message": "This week"
+	},
+	"thisMonth": {
+		"message": "This month"
+	},
+	"thisQuarter": {
+		"message": "This quarter"
+	},
+	"thisYear": {
+		"message": "This year"
+	},
+	"range": {
+		"message": "Range"
+	},
+	"afterDate": {
+		"message": "After $date$",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "Before $date$",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "Verbatim"
+	},
+	"verbatimTip": {
+		"message": "Search using your exact words, without spelling correction or synonyms"
+	},
+	"resultCountTip": {
+		"message": "Approximate number of results"
+	}
+}

@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Tarihe göre Google Arama – Tarih filtresi ve özel aralıklar"
+	},
+	"extDescription": {
+		"message": "Google'ı tarih ve saate göre filtreleyin – Web, Görseller, Videolar, Haberler. 3/6 ay, 3 yıl, bu hafta/ay/yıl ve özel aralıklar."
+	},
+	"anyTime": {
+		"message": "Her zaman"
+	},
+	"tipPastHour": {
+		"message": "Son 1 saat"
+	},
+	"tipPastDay": {
+		"message": "Son 24 saat"
+	},
+	"tipPastWeek": {
+		"message": "Son 1 hafta"
+	},
+	"tipPastMonth": {
+		"message": "Son 1 ay"
+	},
+	"tipPast3Months": {
+		"message": "Son 3 ay"
+	},
+	"tipPast6Months": {
+		"message": "Son 6 ay"
+	},
+	"tipPastYear": {
+		"message": "Son 1 yıl"
+	},
+	"tipPast3Years": {
+		"message": "Son 3 yıl"
+	},
+	"abbrHour": {
+		"message": "1 sa"
+	},
+	"abbrDay": {
+		"message": "1 gün"
+	},
+	"abbrWeek": {
+		"message": "7 gün"
+	},
+	"abbrMonth": {
+		"message": "1 ay"
+	},
+	"abbr3Months": {
+		"message": "3 ay"
+	},
+	"abbr6Months": {
+		"message": "6 ay"
+	},
+	"abbrYear": {
+		"message": "1 yıl"
+	},
+	"abbr3Years": {
+		"message": "3 yıl"
+	},
+	"thisWeek": {
+		"message": "Bu hafta"
+	},
+	"thisMonth": {
+		"message": "Bu ay"
+	},
+	"thisQuarter": {
+		"message": "Bu çeyrek"
+	},
+	"thisYear": {
+		"message": "Bu yıl"
+	},
+	"range": {
+		"message": "Özel aralık"
+	},
+	"afterDate": {
+		"message": "$date$ sonrası",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "$date$ öncesi",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "Birebir"
+	},
+	"verbatimTip": {
+		"message": "Yazım düzeltmesi veya eş anlamlılar olmadan tam olarak yazdığınız kelimeleri arayın"
+	},
+	"resultCountTip": {
+		"message": "Yaklaşık sonuç sayısı"
+	}
+}

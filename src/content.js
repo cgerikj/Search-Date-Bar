@@ -1,5 +1,11 @@
 'use strict';
 
+// Localized UI string; falls back to the key outside an extension (e.g. tests).
+function t(key, substitutions) {
+	var msg = (typeof chrome !== "undefined" && chrome.i18n) ? chrome.i18n.getMessage(key, substitutions) : "";
+	return msg || key;
+}
+
 function changeElementStyle(elem, s, value) {
 	if (elem) elem.style[s] = value;
 }
@@ -32,16 +38,15 @@ function setTbsParameter(parameter, value) {
 
 // Tooltip/aria-label text for the abbreviated buttons (1h, 1d, ...).
 var QDR_FULL_LABELS = {
-	"": "Any time",
-	"h": "Past hour",
-	"d": "Past day",
-	"w": "Past week",
-	"m": "Past month",
-	"m3": "Past 3 months",
-	"m6": "Past 6 months",
-	"y": "Past year",
-	"y2": "Past 2 years",
-	"y5": "Past 5 years",
+	"": t("anyTime"),
+	"h": t("tipPastHour"),
+	"d": t("tipPastDay"),
+	"w": t("tipPastWeek"),
+	"m": t("tipPastMonth"),
+	"m3": t("tipPast3Months"),
+	"m6": t("tipPast6Months"),
+	"y": t("tipPastYear"),
+	"y3": t("tipPast3Years"),
 };
 
 function createButton(qdr, tbs, text) {
@@ -99,10 +104,10 @@ function getCalendarPresets() {
 	const startOfQuarter = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
 	const startOfYear = new Date(now.getFullYear(), 0, 1);
 	return [
-		{ key: "week", label: "This week", cdMin: mmddyyyy(startOfWeek) },
-		{ key: "month", label: "This month", cdMin: mmddyyyy(startOfMonth) },
-		{ key: "quarter", label: "This quarter", cdMin: mmddyyyy(startOfQuarter) },
-		{ key: "year", label: "This year", cdMin: mmddyyyy(startOfYear) },
+		{ key: "week", label: t("thisWeek"), cdMin: mmddyyyy(startOfWeek) },
+		{ key: "month", label: t("thisMonth"), cdMin: mmddyyyy(startOfMonth) },
+		{ key: "quarter", label: t("thisQuarter"), cdMin: mmddyyyy(startOfQuarter) },
+		{ key: "year", label: t("thisYear"), cdMin: mmddyyyy(startOfYear) },
 	];
 }
 
@@ -141,7 +146,7 @@ function readResultCount() {
 function createResultCountElement() {
 	const li = document.createElement("li");
 	li.className = "time-li time-li-count";
-	li.title = "Approximate number of results";
+	li.title = t("resultCountTip");
 
 	const fill = () => {
 		const count = readResultCount();
@@ -233,7 +238,7 @@ function createRangeButton(tbs, presetCdMins) {
 	var customLi = document.createElement("li");
 	customLi.className = "time-li time-li-range"
 
-	let customButtonText = 'Range'
+	let customButtonText = t("range")
 	let cd_min = '', cd_max = ''
 
 	// Custom range selected
@@ -267,11 +272,11 @@ function createRangeButton(tbs, presetCdMins) {
 		}
 
 		else if (cd_min) {
-			customButtonText = `After ${toIso8601(cd_min)}`
+			customButtonText = t("afterDate", [toIso8601(cd_min)])
 		}
 
 		else if (cd_max) {
-			customButtonText = `Before ${toIso8601(cd_max)}`
+			customButtonText = t("beforeDate", [toIso8601(cd_max)])
 		}
 	}
 
@@ -297,8 +302,8 @@ function createRangeButton(tbs, presetCdMins) {
 }
 
 function insertNewButtons() {
-	const qdrList = ["", "h", "d", "w", "m", "m3", "m6", "y", "y2", "y5"];
-	const strings = ["Any time", "1h", "1d", "7d", "1mo", "3mo", "6mo", "1yr", "2yr", "5yr"];
+	const qdrList = ["", "h", "d", "w", "m", "m3", "m6", "y", "y3"];
+	const strings = [t("anyTime"), t("abbrHour"), t("abbrDay"), t("abbrWeek"), t("abbrMonth"), t("abbr3Months"), t("abbr6Months"), t("abbrYear"), t("abbr3Years")];
 
 	let tbs = getParameterByName("tbs");
 
@@ -313,16 +318,17 @@ function insertNewButtons() {
 	var verbatim = document.createElement("li");
 	verbatim.style.marginLeft = "auto"; // push to row end; it's a flex row, so float doesn't work
 
-	var verbatimTitle = "Search using your exact words, without spelling correction or synonyms";
+	var verbatimTitle = t("verbatimTip");
+	var verbatimLabel = t("verbatim");
 
 	if(tbs == "li:1") {
 		var newUrl = setTbsParameter("qdr", null);
-		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '" title="' + verbatimTitle + '"><h3 class="time-h3 time-h3-sel">Verbatim</h3></a>'
+		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '" title="' + verbatimTitle + '"><h3 class="time-h3 time-h3-sel">' + verbatimLabel + '</h3></a>'
 		verbatim.className = "time-li time-li-sel time-li-verbatim";
 		verbatim.id = "li_1";
 	} else { //verbatim not selected
 		var newUrl = setTbsParameter("li", 1);
-		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '" title="' + verbatimTitle + '"><h3 class="time-h3">Verbatim</h3></a>'
+		verbatim.innerHTML = '<a class="q qs" href="' + newUrl + '" title="' + verbatimTitle + '"><h3 class="time-h3">' + verbatimLabel + '</h3></a>'
 		verbatim.className = "time-li time-li-verbatim";
 		verbatim.id = "li_";
 	}

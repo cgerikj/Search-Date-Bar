@@ -1,0 +1,99 @@
+{
+	"extName": {
+		"message": "Recherche Google par date – Filtre de date et plages personnalisées"
+	},
+	"extDescription": {
+		"message": "Filtrez Google par date et heure – Web, Images, Vidéos, Actualités. 3/6 mois, 3 ans, cette semaine/mois/année, plages perso."
+	},
+	"anyTime": {
+		"message": "À tout moment"
+	},
+	"tipPastHour": {
+		"message": "Moins d'une heure"
+	},
+	"tipPastDay": {
+		"message": "Moins de 24 heures"
+	},
+	"tipPastWeek": {
+		"message": "Moins d'une semaine"
+	},
+	"tipPastMonth": {
+		"message": "Moins d'un mois"
+	},
+	"tipPast3Months": {
+		"message": "Moins de 3 mois"
+	},
+	"tipPast6Months": {
+		"message": "Moins de 6 mois"
+	},
+	"tipPastYear": {
+		"message": "Moins d'un an"
+	},
+	"tipPast3Years": {
+		"message": "Moins de 3 ans"
+	},
+	"abbrHour": {
+		"message": "1h"
+	},
+	"abbrDay": {
+		"message": "1j"
+	},
+	"abbrWeek": {
+		"message": "7j"
+	},
+	"abbrMonth": {
+		"message": "1M"
+	},
+	"abbr3Months": {
+		"message": "3M"
+	},
+	"abbr6Months": {
+		"message": "6M"
+	},
+	"abbrYear": {
+		"message": "1A"
+	},
+	"abbr3Years": {
+		"message": "3A"
+	},
+	"thisWeek": {
+		"message": "Cette semaine"
+	},
+	"thisMonth": {
+		"message": "Ce mois-ci"
+	},
+	"thisQuarter": {
+		"message": "Ce trimestre"
+	},
+	"thisYear": {
+		"message": "Cette année"
+	},
+	"range": {
+		"message": "Période"
+	},
+	"afterDate": {
+		"message": "Après $date$",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"beforeDate": {
+		"message": "Avant $date$",
+		"placeholders": {
+			"date": {
+				"content": "$1"
+			}
+		}
+	},
+	"verbatim": {
+		"message": "Mot à mot"
+	},
+	"verbatimTip": {
+		"message": "Rechercher vos mots exacts, sans correction orthographique ni synonymes"
+	},
+	"resultCountTip": {
+		"message": "Nombre approximatif de résultats"
+	}
+}
