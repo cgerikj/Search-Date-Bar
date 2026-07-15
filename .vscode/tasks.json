@@ -59,7 +59,7 @@
 				"reveal": "always",
 				"panel": "dedicated"
 			},
-			"detail": "Zips src/ to release/google-search-by-date-v{version}.zip for Chrome Web Store upload. Bump manifest version first — it won't overwrite an existing zip."
+			"detail": "Zips src/ to release/google-search-by-date-v{version}.zip for Chrome Web Store upload. Overwrites any existing zip of the same version."
 		}
 	]
 }

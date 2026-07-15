@@ -20,10 +20,6 @@ const version = manifest.version;
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const outPath = path.join(OUT_DIR, `google-search-by-date-v${version}.zip`);
-if (fs.existsSync(outPath)) {
-	console.error(`${outPath} already exists — bump the version first.`);
-	process.exit(1);
-}
 
 const output = fs.createWriteStream(outPath);
 const archive = archiver('zip', { zlib: { level: 9 } });
