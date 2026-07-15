@@ -1,8 +1,8 @@
-# Search Date Bar
+# Google Search by Date – Date Filter Bar with Custom Ranges
 
 A Chrome extension that puts Google's date filter (Past hour, Past day, Past week...) right under the search box, instead of buried in the Tools dropdown — plus ranges Google doesn't offer at all (3/6 months, 2/5 years), calendar-aligned presets (this week/month/quarter/year), and a custom date-range picker.
 
-![Search Date Bar in action](screenshots/img1_ranges.png)
+![Google Search by Date in action](screenshots/img1_ranges.png)
 
 ## Install
 

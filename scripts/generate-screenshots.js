@@ -170,7 +170,7 @@ const SCREENSHOTS = [
 		arrowGap: 4,
 		arrow: { height: 150, color: '#4CAF50', strokeColor: '#8fbf5f' },
 		headline: "Ranges Google's own filter **doesn't have**",
-		featureLabel: '6 months · 2 years · 5 years',
+		featureLabel: '3 months · 6 months · 2 years · 5 years',
 		// Plain shot (no card) for generate-banners.js to embed.
 		plainCopyPath: '../assets/banner-shot.png',
 	},

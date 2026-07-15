@@ -46,7 +46,7 @@ function marqueeHtml() {
 			<div style="flex:0 0 460px;">
 				<div style="display:flex;align-items:center;gap:16px;margin-bottom:22px;">
 					<img src="${ICON}" style="width:56px;height:56px;border-radius:13px;">
-					<div style="font-size:22px;font-weight:700;color:#8a92a0;letter-spacing:1.8px;text-transform:uppercase;">Search Date Bar</div>
+					<div style="font-size:22px;font-weight:700;color:#8a92a0;letter-spacing:1.8px;text-transform:uppercase;">Google Search by Date</div>
 				</div>
 				<div style="display:flex;gap:6px;margin-bottom:20px;">${dashMarks(6)}</div>
 				<div style="font-size:44px;font-weight:800;color:#f5f6f7;line-height:1.12;letter-spacing:-0.5px;">${HEADLINE}</div>
@@ -72,11 +72,11 @@ function smallTileHtml() {
 		<div style="position:relative;z-index:2;padding:16px 20px 0;">
 			<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
 				<img src="${ICON}" style="width:28px;height:28px;border-radius:7px;">
-				<div style="font-size:11px;font-weight:700;color:#8a92a0;letter-spacing:1.2px;text-transform:uppercase;">Search Date Bar</div>
+				<div style="font-size:11px;font-weight:700;color:#8a92a0;letter-spacing:1.2px;text-transform:uppercase;">Google Search by Date</div>
 			</div>
 			<div style="font-size:20px;font-weight:800;color:#f5f6f7;line-height:1.16;letter-spacing:-0.3px;white-space:nowrap;">Every date range, one click away</div>
 		</div>
-		<div style="position:absolute;left:20px;right:20px;bottom:18px;height:132px;border-radius:10px;overflow:hidden;
+		<div style="position:absolute;left:20px;right:20px;top:108px;bottom:18px;border-radius:10px;overflow:hidden;
 			box-shadow:0 10px 26px rgba(0,0,0,0.4);z-index:2;">
 			<img src="${SHOT}" style="width:100%;height:100%;object-fit:cover;object-position:top left;">
 		</div>

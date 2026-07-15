@@ -1,8 +1,8 @@
 {
-  "name": "search-date-bar",
+  "name": "google-search-by-date",
   "private": true,
   "version": "1.0.0",
-  "description": "Playwright test harness for the Search Date Bar Chrome extension",
+  "description": "Playwright test harness for the Google Search by Date Chrome extension",
   "scripts": {
     "test": "playwright test tests",
     "release": "node scripts/release.js",

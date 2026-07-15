@@ -19,7 +19,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(SRC_DIR, 'manifest.json'),
 const version = manifest.version;
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
-const outPath = path.join(OUT_DIR, `search-date-bar-v${version}.zip`);
+const outPath = path.join(OUT_DIR, `google-search-by-date-v${version}.zip`);
 if (fs.existsSync(outPath)) {
 	console.error(`${outPath} already exists — bump the version first.`);
 	process.exit(1);
