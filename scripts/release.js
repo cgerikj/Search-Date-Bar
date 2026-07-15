@@ -7,7 +7,9 @@ const archiver = require('archiver');
 const SRC_DIR = path.resolve(__dirname, '../src');
 const OUT_DIR = path.resolve(__dirname, '../release');
 
-const REQUIRED = ['manifest.json', 'content.js', 'styles.css', 'icons'];
+// result-count.js loads before content.js (see manifest "js"); _locales is
+// mandatory once manifest sets default_locale (Chrome won't load without it).
+const REQUIRED = ['manifest.json', 'content.js', 'result-count.js', 'styles.css', 'icons', '_locales'];
 for (const name of REQUIRED) {
 	if (!fs.existsSync(path.join(SRC_DIR, name))) {
 		console.error(`Missing src/${name} — aborting.`);
