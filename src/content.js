@@ -84,19 +84,6 @@ function toIso8601 (date) {
 	return iso8601
 }
 
-function fromIso8601 (date) {
-	if (!date) {
-		return ''
-	}
-
-	const parts = date.split('-')
-	let year = parts[0]
-	let month = parts[1]
-	let day = parts[2]
-
-	return `${month}/${day}/${year}`
-}
-
 function mmddyyyy(date) {
 	return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 }
@@ -155,6 +142,56 @@ function insertCalendarRow(afterNode, rangeButton, presets, currentCdMin) {
 	return calendarRow;
 }
 
+// Google's date menu, found via its "qdr:" links — an API param that's stable
+// across Google's releases and locales, unlike class names or menu text. It's
+// the nearest common ancestor of those links (ignoring our own bar's links).
+function findNativeDateMenu() {
+	const qdrLinks = Array.from(document.querySelectorAll('a[href*="qdr:"]'))
+		.filter((link) => !link.closest('.time-ul, .sdb-bar-wrapper'));
+
+	if (qdrLinks.length === 0) {
+		return null;
+	}
+
+	let menu = qdrLinks[0];
+	while (menu && !qdrLinks.every((link) => menu.contains(link))) {
+		menu = menu.parentElement;
+	}
+
+	return menu;
+}
+
+// Opens Google's own native "Custom range" modal by clicking its trigger,
+// which is already in the DOM (hidden) — no menu walk, and Google maintains the
+// picker. Anchored on the stable <g-dialog> tag; a no-op if it can't be found.
+function openNativeCustomRangeDialog() {
+	const menu = findNativeDateMenu();
+	if (!menu) {
+		return;
+	}
+
+	// The custom-range modal is a <g-dialog> that holds a calendar / date fields.
+	const dialog = Array.from(menu.querySelectorAll('g-dialog'))
+		.find((candidate) => candidate.querySelector('table, [role="grid"], input'));
+	if (!dialog) {
+		return;
+	}
+
+	// Its trigger is the actionable element sitting alongside the dialog.
+	const trigger = Array.from(dialog.parentElement.querySelectorAll('[jsaction]'))
+		.find((element) => {
+			const isInsideDialog = dialog.contains(element) || element === dialog;
+			const hasLabel = element.textContent.trim() !== '';
+			return !isInsideDialog && hasLabel;
+		});
+	if (!trigger) {
+		return;
+	}
+
+	const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
+	trigger.dispatchEvent(clickEvent);
+}
+
 function createRangeButton(tbs, presetCdMins) {
 	var customLi = document.createElement("li");
 	customLi.className = "time-li time-li-range"
@@ -207,108 +244,18 @@ function createRangeButton(tbs, presetCdMins) {
 	customButtonHeading.textContent = customButtonText;
 	customLi.appendChild(customButtonHeading);
 
-	var customRangePopup = document.createElement("div");
-	var popupInner = document.createElement("div");
-	popupInner.id = "custom-range-popup";
-	popupInner.setAttribute("role", "group");
-	popupInner.setAttribute("aria-label", "Custom date range");
-
-	var fromContainer = document.createElement("div");
-	fromContainer.className = "custom-range-popup-container";
-	var fromLabel = document.createElement("label");
-	fromLabel.setAttribute("for", "custom-start");
-	fromLabel.textContent = "From: ";
-	var fromInput = document.createElement("input");
-	fromInput.type = "date";
-	fromInput.id = "custom-start";
-	fromInput.name = "custom-start";
-	fromInput.value = toIso8601(cd_min);
-	fromInput.tabIndex = 0;
-	fromContainer.append(fromLabel, fromInput);
-
-	var toContainer = document.createElement("div");
-	toContainer.className = "custom-range-popup-container";
-	var toLabel = document.createElement("label");
-	toLabel.setAttribute("for", "custom-end");
-	toLabel.textContent = "To: ";
-	var toInput = document.createElement("input");
-	toInput.type = "date";
-	toInput.id = "custom-end";
-	toInput.name = "custom-end";
-	toInput.value = toIso8601(cd_max);
-	toInput.tabIndex = 1;
-	toContainer.append(toLabel, toInput);
-
-	var goButton = document.createElement("button");
-	goButton.id = "custom-range-button";
-	goButton.tabIndex = 2;
-	goButton.textContent = "Go";
-
-	popupInner.append(fromContainer, toContainer, goButton);
-	customRangePopup.appendChild(popupInner);
-
-	// Popup is nested in its trigger <li> for positioning, so clicks inside it
-	// must not bubble up to customLi's onclick and toggle it closed.
-	customRangePopup.onclick = (event) => {
-		event.stopPropagation();
-	}
-	customLi.appendChild(customRangePopup);
-
-	waitFor('#custom-range-button').then((elem) => {
-		if (!elem) {
-			return
-		}
-		
-		elem.onclick = () => {
-			const startDate = document.getElementById('custom-start').value
-			const endDate = document.getElementById('custom-end').value
-
-			var href = new URL(location.href);
-			const params =  ['cdr:1']
-			if (startDate) {
-				params.push(`cd_min:${fromIso8601(startDate)}`)
-			}
-			if (endDate) {
-				params.push(`cd_max:${fromIso8601(endDate)}`)
-			}
-			const query = params.join(',')
-			href.searchParams.set("tbs", query);
-			href.searchParams.delete("sdb_cal"); // this is a genuinely custom range, not a preset
-			const newUrl = href.toString();
-			window.location.href = newUrl
-		}
-	})
-
-	// The quick-filter buttons are <a> links and get keyboard/AT support for free; this needs it explicitly.
+	// Rather than build (and maintain) our own date picker, open Google's own
+	// native "Custom range" modal — see openNativeCustomRangeDialog.
 	customLi.tabIndex = 0;
 	customLi.setAttribute("role", "button");
-	customLi.setAttribute("aria-haspopup", "true");
-	customLi.setAttribute("aria-expanded", "false");
-	customLi.setAttribute("aria-controls", "custom-range-popup");
-
-	const toggleCustomRangePopup = () => {
-		const currentCustomRangePopup = document.getElementById('custom-range-popup')
-		const isOpen = currentCustomRangePopup.style.display === 'flex'
-
-		if (!isOpen) {
-			// position:fixed coordinates match getBoundingClientRect's (both
-			// viewport-relative), so this needs no scroll-offset math — and
-			// it's recomputed on every open, so it stays correct even if the
-			// bar's own horizontal scroll position changed since last time.
-			const rect = customLi.getBoundingClientRect();
-			currentCustomRangePopup.style.left = `${rect.left}px`;
-			currentCustomRangePopup.style.top = `${rect.bottom}px`;
-		}
-		currentCustomRangePopup.style.display = isOpen ? 'none' : 'flex'
-		customLi.setAttribute("aria-expanded", isOpen ? "false" : "true")
-	}
-	customLi.onclick = toggleCustomRangePopup;
+	customLi.setAttribute("aria-haspopup", "dialog");
+	customLi.onclick = openNativeCustomRangeDialog;
 	customLi.onkeydown = (event) => {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			toggleCustomRangePopup();
+			openNativeCustomRangeDialog();
 		}
-	}
+	};
 	return customLi;
 }
 
@@ -405,22 +352,6 @@ function load() {
 			insertNewButtons();
 			modifyOtherElements();
 			break;
-	}
-}
-
-const waitFor = async selector => {
-	let elem
-	let i = 0
-	while (true) {
-		if (++i > 10) {
-			return null
-		}
-
-		elem = document.querySelector(selector)
-		if  (!!elem) {
-			return elem
-		}
-		await new Promise(requestAnimationFrame)
 	}
 }
 

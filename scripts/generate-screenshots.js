@@ -191,25 +191,30 @@ const SCREENSHOTS = [
 	{
 		name: 'img3_rangepicker.png',
 		query: 'reddit',
-		// CWS downscales every screenshot to 640x400 for display regardless of
-		// upload size, so a native 1280x800 source is strictly sharper.
 		captureViewport: { width: 1280, height: 800 },
 		deviceScaleFactor: 2,
-		forceSelectChipId: 'qdr_w',
-		// Shows the popup actually open (real proof of the headline claim)
-		// instead of just an arrow pointing at the closed "Range" chip.
+		// Show the Range button in its "custom range applied" state, labelled
+		// with the picked dates. A real cdr URL returns no results on this
+		// profile (same as qdr), so set the label directly — same approach as
+		// forceSelectChipId.
 		interact: async (page) => {
-			await page.click('.time-li-range');
-			await page.waitForSelector('#custom-range-popup', { state: 'visible' });
-			await page.fill('#custom-start', '2026-06-01');
-			await page.fill('#custom-end', '2026-06-30');
-			// .fill() leaves the last-edited date segment focused/highlighted —
-			// blur so the screenshot doesn't show a selected "2026" year.
-			await page.locator('#custom-end').evaluate((el) => el.blur());
+			await page.waitForSelector('.time-li-range h3');
+			await page.evaluate(() => {
+				// A custom range is active, so clear the default "Any time" chip.
+				document.getElementById('qdr_')?.classList.remove('time-li-sel');
+				document.querySelector('#qdr_ h3')?.classList.remove('time-h3-sel');
+				// Show the picked range as the Range button's active label.
+				const label = document.querySelector('.time-li-range h3');
+				label.textContent = '2026-06-01 – 2026-06-30';
+				label.classList.add('time-h3-sel');
+			});
 			await page.waitForTimeout(200);
 		},
 		crop: { left: 0, top: 0, width: 1656, height: 1035 },
 		outputSize: { width: 1280, height: 800 },
+		arrowTarget: '.time-li-range',
+		arrowGap: 4,
+		arrow: { height: 150, color: '#4CAF50', strokeColor: '#8fbf5f' },
 		headline: 'Plus a **real custom date-range picker**',
 		featureLabel: 'Custom Range',
 	},
@@ -301,9 +306,12 @@ const SCREENSHOTS = [
 		}
 
 		if (spec.forceSelectVerbatim) {
-			// Verbatim's id alternates between li_/li_1, unlike the numeric
-			// chips' stable ids — select it by class instead.
 			await page.evaluate(() => {
+				// On a real li:1 URL "Any time" isn't lit, so clear the default.
+				document.getElementById('qdr_')?.classList.remove('time-li-sel');
+				document.querySelector('#qdr_ h3')?.classList.remove('time-h3-sel');
+				// Verbatim's id alternates between li_/li_1, unlike the numeric
+				// chips' stable ids — select it by class instead.
 				const verbatimLi = document.querySelector('.time-li-verbatim');
 				if (verbatimLi) {
 					verbatimLi.classList.add('time-li-sel');
@@ -315,6 +323,9 @@ const SCREENSHOTS = [
 
 		if (spec.forceSelectCalendarKey) {
 			await page.evaluate((key) => {
+				// On a real cdr URL "Any time" isn't lit, so clear the default.
+				document.getElementById('qdr_')?.classList.remove('time-li-sel');
+				document.querySelector('#qdr_ h3')?.classList.remove('time-h3-sel');
 				const li = document.querySelector(`[data-preset="${key}"]`);
 				if (li) {
 					li.classList.add('time-li-sel');

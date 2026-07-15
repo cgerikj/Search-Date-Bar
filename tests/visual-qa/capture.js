@@ -26,7 +26,7 @@ const SCENARIOS = [
 	{ group: 'Extension states', name: '09-active-1D-filter', query: 'google', params: '&tbs=qdr:d' },
 	{
 		group: 'Extension states',
-		name: '09b-custom-range-popup-open',
+		name: '09b-custom-range-modal-open',
 		query: 'google',
 		interact: async (page) => {
 			await page.getByText('Range', { exact: true }).click();
@@ -107,7 +107,7 @@ const SCENARIOS = [
 	{ group: 'Dark mode', name: '24-dark-baseline', query: 'google', colorScheme: 'dark' },
 	{
 		group: 'Dark mode',
-		name: '25-dark-custom-range-popup-open',
+		name: '25-dark-custom-range-modal-open',
 		query: 'google',
 		colorScheme: 'dark',
 		interact: async (page) => {

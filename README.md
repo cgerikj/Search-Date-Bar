@@ -17,7 +17,7 @@ Google's own date filter takes two clicks to reach (Tools → Any time) and tops
 - One-click ranges: Any time, 1h, 1d, 7d, 1mo, 3mo, 6mo, 1yr, 2yr, 5yr
 - Calendar-aligned presets too: This week, This month, This quarter, This year
 - Works on Images, Videos, News, Short videos, and Books, not just the main results page
-- Custom date range, with a native date picker
+- Custom date range — opens Google's own native date-range picker
 - Verbatim toggle — exact words, no spelling correction or synonyms
 - Matches Google's own light/dark theme automatically
 - Zero layout shift — the bar never pushes content down as it loads
