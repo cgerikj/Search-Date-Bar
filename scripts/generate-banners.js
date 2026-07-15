@@ -2,16 +2,24 @@
 // assets/banner3.png) from the icon + a real product screenshot.
 // Run: node scripts/generate-banners.js
 const { chromium } = require('playwright');
+const { execFileSync } = require('child_process');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
 
 const OUT_DIR = path.resolve(__dirname, '../assets');
+const SHOT_PATH = path.resolve(__dirname, '../assets/banner-shot.png');
+
+// The embedded shot is the plain (no marketing card) product screenshot,
+// emitted by generate-screenshots.js. Regenerate it here so it's a live part
+// of this pipeline, not a stale file a separate run had to produce first.
+execFileSync(process.execPath, [path.resolve(__dirname, 'generate-screenshots.js'), 'img1_ranges.png'], { stdio: 'inherit' });
+
 const ICON = `data:image/png;base64,${fs.readFileSync(path.resolve(__dirname, '../src/icons/icon128.png')).toString('base64')}`;
-const SHOT = `data:image/png;base64,${fs.readFileSync(path.resolve(__dirname, '../screenshots/img.png')).toString('base64')}`;
+const SHOT = `data:image/png;base64,${fs.readFileSync(SHOT_PATH).toString('base64')}`;
 
 const HEADLINE = 'Every date range, one click away';
-const TAGLINE = "6 months, 2 years, 5 years — and a custom date picker. Ranges Google's own filter doesn't have.";
+const TAGLINE = "Rolling windows, calendar-aligned presets, and a custom date picker. Ranges Google's own filter doesn't have.";
 const FONT = `'Segoe UI', 'Helvetica Neue', Arial, sans-serif`;
 const PALETTE = { red: '#cf564a', amber: '#cf953e', teal: '#3fa79e', blue: '#4a72c2' };
 const BASE = '#232a35';
@@ -66,7 +74,7 @@ function smallTileHtml() {
 				<img src="${ICON}" style="width:28px;height:28px;border-radius:7px;">
 				<div style="font-size:11px;font-weight:700;color:#8a92a0;letter-spacing:1.2px;text-transform:uppercase;">Search Date Bar</div>
 			</div>
-			<div style="font-size:20px;font-weight:800;color:#f5f6f7;line-height:1.16;letter-spacing:-0.3px;">Every date range,<br>one click away</div>
+			<div style="font-size:20px;font-weight:800;color:#f5f6f7;line-height:1.16;letter-spacing:-0.3px;white-space:nowrap;">Every date range, one click away</div>
 		</div>
 		<div style="position:absolute;left:20px;right:20px;bottom:18px;height:132px;border-radius:10px;overflow:hidden;
 			box-shadow:0 10px 26px rgba(0,0,0,0.4);z-index:2;">

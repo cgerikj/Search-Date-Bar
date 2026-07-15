@@ -26,6 +26,7 @@ function getParameterByName(name, url) {
 function setTbsParameter(parameter, value) {
 	var href = new URL(location.href);
 	href.searchParams.set("tbs", parameter + ":" + value);
+	href.searchParams.delete("sdb_cal"); // leftover from a calendar-preset click, if any
 	return href.toString();
 }
 
@@ -36,6 +37,7 @@ var QDR_FULL_LABELS = {
 	"d": "Past day",
 	"w": "Past week",
 	"m": "Past month",
+	"m3": "Past 3 months",
 	"m6": "Past 6 months",
 	"y": "Past year",
 	"y2": "Past 2 years",
@@ -95,19 +97,65 @@ function fromIso8601 (date) {
 	return `${month}/${day}/${year}`
 }
 
-function insertNewButtons() {
-	const qdrList = ["", "h", "d", "w", "m", "m6", "y", "y2", "y5"];
-	const strings = ["Any time", "1h", "1d", "7d", "1m", "6m", "1y", "2y", "5y"];
+function mmddyyyy(date) {
+	return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
 
-	let tbs = getParameterByName("tbs");
+// Calendar-aligned presets (This week/month/year) vs the qdr chips' rolling
+// windows (past N from now) — reuses the same open-ended custom-range (cdr)
+// mechanism as the Range picker's "After X" case, just with a computed start.
+function getCalendarPresets() {
+	const now = new Date();
+	const startOfWeek = new Date(now);
+	startOfWeek.setDate(now.getDate() - now.getDay());
+	const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+	const startOfQuarter = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+	const startOfYear = new Date(now.getFullYear(), 0, 1);
+	return [
+		{ key: "week", label: "This week", cdMin: mmddyyyy(startOfWeek) },
+		{ key: "month", label: "This month", cdMin: mmddyyyy(startOfMonth) },
+		{ key: "quarter", label: "This quarter", cdMin: mmddyyyy(startOfQuarter) },
+		{ key: "year", label: "This year", cdMin: mmddyyyy(startOfYear) },
+	];
+}
 
-	var newParent = document.createElement("ul");
-	newParent.className = "time-ul hdtb-msb-vis";
-
-	for(var i = 0; i < strings.length; i++) {
-		newParent.appendChild(createButton(qdrList[i], tbs, strings[i]));
+function createCalendarButton(preset, isSelected) {
+	const li = document.createElement("li");
+	li.dataset.preset = preset.key;
+	if (isSelected) {
+		li.innerHTML = `<h3 class="time-h3 time-h3-sel">${preset.label}</h3>`;
+		li.className = "time-li time-li-sel";
+	} else {
+		const href = new URL(location.href);
+		href.searchParams.set("tbs", `cdr:1,cd_min:${preset.cdMin}`);
+		// "This month" and "This quarter" compute the same date in a
+		// quarter's first month, so cd_min alone can't tell them apart —
+		// this marker disambiguates exactly. Google ignores unknown params.
+		href.searchParams.set("sdb_cal", preset.key);
+		li.innerHTML = `<a class="q qs" href="${href.toString()}"><h3 class="time-h3">${preset.label}</h3></a>`;
+		li.className = "time-li";
 	}
+	return li;
+}
 
+function insertCalendarRow(afterNode, rangeButton, presets, currentCdMin) {
+	const sdbCal = getParameterByName("sdb_cal");
+	const calendarRow = document.createElement("ul");
+	calendarRow.className = "time-ul time-ul-calendar hdtb-msb-vis";
+	let matched = false;
+	for (const preset of presets) {
+		// Trust the marker when present (exact); fall back to the first
+		// cd_min match otherwise (e.g. an old bookmarked/shared link).
+		const isSelected = sdbCal ? sdbCal === preset.key : (!matched && currentCdMin === preset.cdMin);
+		if (isSelected) matched = true;
+		calendarRow.appendChild(createCalendarButton(preset, isSelected));
+	}
+	calendarRow.appendChild(rangeButton);
+	afterNode.after(calendarRow);
+	return calendarRow;
+}
+
+function createRangeButton(tbs, presetCdMins) {
 	var customLi = document.createElement("li");
 	customLi.className = "time-li time-li-range"
 
@@ -117,7 +165,7 @@ function insertNewButtons() {
 	// Custom range selected
 	if (tbs && tbs.includes('cdr:1')) {
 		const tbsParts = tbs.split(",")
-		
+
 		tbsParts.forEach(part => {
 			const subParts = part.split(':')
 			if (subParts[0] === 'cd_min') {
@@ -131,7 +179,14 @@ function insertNewButtons() {
 				return cd_max = subParts[1]
 			}
 		})
+	}
 
+	// A calendar preset (This week/month/...) sets cd_min through this same
+	// mechanism — it already has its own chip showing "selected", so this
+	// button should just say "Range" instead of also claiming the state.
+	const isPresetRange = cd_min && !cd_max && presetCdMins.includes(cd_min);
+
+	if (!isPresetRange) {
 		// URL stays MM/DD/YYYY (Google's format); the label shows ISO 8601 since it's unambiguous across locales.
 		if (cd_min && cd_max) {
 			customButtonText = `${toIso8601(cd_min)} – ${toIso8601(cd_max)}`
@@ -148,7 +203,7 @@ function insertNewButtons() {
 
 	// textContent/.value, not innerHTML: cd_min/cd_max come from the URL and aren't trusted.
 	var customButtonHeading = document.createElement("h3");
-	customButtonHeading.className = `time-h3 ${(cd_min || cd_max) ? 'time-h3-sel' : ''}`;
+	customButtonHeading.className = `time-h3 ${(!isPresetRange && (cd_min || cd_max)) ? 'time-h3-sel' : ''}`;
 	customButtonHeading.textContent = customButtonText;
 	customLi.appendChild(customButtonHeading);
 
@@ -218,6 +273,7 @@ function insertNewButtons() {
 			}
 			const query = params.join(',')
 			href.searchParams.set("tbs", query);
+			href.searchParams.delete("sdb_cal"); // this is a genuinely custom range, not a preset
 			const newUrl = href.toString();
 			window.location.href = newUrl
 		}
@@ -234,6 +290,15 @@ function insertNewButtons() {
 		const currentCustomRangePopup = document.getElementById('custom-range-popup')
 		const isOpen = currentCustomRangePopup.style.display === 'flex'
 
+		if (!isOpen) {
+			// position:fixed coordinates match getBoundingClientRect's (both
+			// viewport-relative), so this needs no scroll-offset math — and
+			// it's recomputed on every open, so it stays correct even if the
+			// bar's own horizontal scroll position changed since last time.
+			const rect = customLi.getBoundingClientRect();
+			currentCustomRangePopup.style.left = `${rect.left}px`;
+			currentCustomRangePopup.style.top = `${rect.bottom}px`;
+		}
 		currentCustomRangePopup.style.display = isOpen ? 'none' : 'flex'
 		customLi.setAttribute("aria-expanded", isOpen ? "false" : "true")
 	}
@@ -244,7 +309,21 @@ function insertNewButtons() {
 			toggleCustomRangePopup();
 		}
 	}
-	newParent.appendChild(customLi);
+	return customLi;
+}
+
+function insertNewButtons() {
+	const qdrList = ["", "h", "d", "w", "m", "m3", "m6", "y", "y2", "y5"];
+	const strings = ["Any time", "1h", "1d", "7d", "1mo", "3mo", "6mo", "1yr", "2yr", "5yr"];
+
+	let tbs = getParameterByName("tbs");
+
+	var newParent = document.createElement("ul");
+	newParent.className = "time-ul hdtb-msb-vis";
+
+	for(var i = 0; i < strings.length; i++) {
+		newParent.appendChild(createButton(qdrList[i], tbs, strings[i]));
+	}
 
 	// Result count is left out; it's already in Google's own Tools/Verktyg menu.
 	var verbatim = document.createElement("li");
@@ -268,10 +347,24 @@ function insertNewButtons() {
 		newParent.appendChild(verbatim);
 	}
 
+	// Both rows go in one wrapper so the CLS-reservation trick (see styles.css)
+	// only has to position/measure a single element — the rows stack via
+	// normal flow inside it instead of each needing their own absolute offset.
+	const presets = getCalendarPresets();
+	const presetCdMins = presets.map((p) => p.cdMin);
+	// Only an open-ended "since X" range (no cd_max) can be a preset match —
+	// a bounded custom range shouldn't light up a preset chip by coincidence.
+	const currentCdMin = tbs && !tbs.includes("cd_max:") ? (tbs.match(/cd_min:([^,]+)/) || [])[1] || null : null;
+
+	const barWrapper = document.createElement("div");
+	barWrapper.className = "sdb-bar-wrapper";
+	barWrapper.appendChild(newParent);
+	insertCalendarRow(newParent, createRangeButton(tbs, presetCdMins), presets, currentCdMin);
+
 	// #appbar is a fallback if #center_col (the real results column) is ever missing.
 	let referenceNode = document.getElementById("center_col") || document.getElementById("appbar");
 	if (referenceNode) {
-		referenceNode.prepend(newParent);
+		referenceNode.prepend(barWrapper);
 	}
 }
 

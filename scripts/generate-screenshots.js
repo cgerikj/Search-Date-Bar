@@ -160,13 +160,19 @@ const SCREENSHOTS = [
 		// tbs=qdr URL param is unreliable on this profile — force the chip's
 		// selected look via its own CSS classes instead.
 		forceSelectChipId: 'qdr_m6',
-		crop: { left: 0, top: 0, width: 1550, height: 969 },
+		// Crop MUST match outputSize's aspect ratio (1280/800 = 1.6). The
+		// resize below uses sharp's default fit:'cover', which crops the top
+		// & bottom to force the target aspect — an off-ratio crop silently
+		// slices the top of the page off. width = height * 1.6.
+		crop: { left: 0, top: 0, width: 1656, height: 1035 },
 		outputSize: { width: 1280, height: 800 },
 		arrowTarget: '#qdr_m6',
-		arrowGap: 12,
-		arrow: { height: 190, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		arrowGap: 4,
+		arrow: { height: 150, color: '#4CAF50', strokeColor: '#8fbf5f' },
 		headline: "Ranges Google's own filter **doesn't have**",
 		featureLabel: '6 months · 2 years · 5 years',
+		// Plain shot (no card) for generate-banners.js to embed.
+		plainCopyPath: '../assets/banner-shot.png',
 	},
 	{
 		name: 'img2_verbatim.png',
@@ -174,11 +180,11 @@ const SCREENSHOTS = [
 		captureViewport: { width: 1280, height: 800 },
 		deviceScaleFactor: 2,
 		forceSelectVerbatim: true,
-		crop: { left: 0, top: 0, width: 1550, height: 969 },
+		crop: { left: 0, top: 0, width: 1656, height: 1035 },
 		outputSize: { width: 1280, height: 800 },
 		arrowTarget: '.time-li-verbatim',
-		arrowGap: 12,
-		arrow: { height: 220, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		arrowGap: 4,
+		arrow: { height: 180, color: '#4CAF50', strokeColor: '#8fbf5f' },
 		headline: 'Exact-match search, **one click away**',
 		featureLabel: 'Verbatim toggle',
 	},
@@ -202,7 +208,7 @@ const SCREENSHOTS = [
 			await page.locator('#custom-end').evaluate((el) => el.blur());
 			await page.waitForTimeout(200);
 		},
-		crop: { left: 0, top: 0, width: 1550, height: 969 },
+		crop: { left: 0, top: 0, width: 1656, height: 1035 },
 		outputSize: { width: 1280, height: 800 },
 		headline: 'Plus a **real custom date-range picker**',
 		featureLabel: 'Custom Range',
@@ -214,13 +220,27 @@ const SCREENSHOTS = [
 		deviceScaleFactor: 2,
 		theme: 'dark',
 		forceSelectChipId: 'qdr_m',
-		crop: { left: 0, top: 0, width: 1550, height: 969 },
+		crop: { left: 0, top: 0, width: 1656, height: 1035 },
 		outputSize: { width: 1280, height: 800 },
 		arrowTarget: '#qdr_m',
-		arrowGap: 12,
-		arrow: { height: 190, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		arrowGap: 4,
+		arrow: { height: 150, color: '#4CAF50', strokeColor: '#8fbf5f' },
 		headline: "Matches Google's dark theme **automatically**",
 		featureLabel: 'Light & dark, seamlessly',
+	},
+	{
+		name: 'img5_calendar.png',
+		query: 'chrome extensions',
+		captureViewport: { width: 1280, height: 800 },
+		deviceScaleFactor: 2,
+		forceSelectCalendarKey: 'quarter',
+		crop: { left: 0, top: 0, width: 1656, height: 1035 },
+		outputSize: { width: 1280, height: 800 },
+		arrowTarget: '[data-preset="quarter"]',
+		arrowGap: 4,
+		arrow: { height: 150, color: '#4CAF50', strokeColor: '#8fbf5f' },
+		headline: 'Real calendar ranges, **not just rolling windows**',
+		featureLabel: 'This week · This month · This quarter · This year',
 	},
 ];
 
@@ -293,6 +313,23 @@ const SCREENSHOTS = [
 			await page.waitForTimeout(200);
 		}
 
+		if (spec.forceSelectCalendarKey) {
+			await page.evaluate((key) => {
+				const li = document.querySelector(`[data-preset="${key}"]`);
+				if (li) {
+					li.classList.add('time-li-sel');
+					li.querySelector('h3')?.classList.add('time-h3-sel');
+				}
+			}, spec.forceSelectCalendarKey);
+			await page.waitForTimeout(200);
+		}
+
+		// Consent dismissal / chip clicks / opening the Range popup can all
+		// leave the page scrolled slightly from 0 — force it back before
+		// measuring or capturing, or every shot ends up cut off at the top.
+		await page.evaluate(() => window.scrollTo(0, 0));
+		await page.waitForTimeout(100);
+
 		// Measured before the context closes — see getArrowTipInOutputSpace.
 		const arrowTip = spec.arrowTarget ? await getArrowTipInOutputSpace(page, spec.arrowTarget, spec) : null;
 
@@ -318,6 +355,14 @@ const SCREENSHOTS = [
 				}])
 				.png()
 				.toBuffer();
+		}
+
+		// Save the plain screenshot+arrow (before the marketing-card wrap) for
+		// the banner to embed — a banner has its own headline, so it wants the
+		// bare product shot, not the full store-listing card.
+		if (spec.plainCopyPath) {
+			await sharp(outBuf).toFile(path.resolve(__dirname, spec.plainCopyPath));
+			console.log(`  [plain] wrote ${spec.plainCopyPath}`);
 		}
 
 		if (spec.headline) {

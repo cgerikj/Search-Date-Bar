@@ -1,6 +1,6 @@
 # Search Date Bar
 
-A Chrome extension that puts Google's date filter (Past hour, Past day, Past week...) in a single row right under the search box, instead of buried in the Tools dropdown — plus ranges Google doesn't offer at all (6 months, 2 years, 5 years) and a custom date-range picker.
+A Chrome extension that puts Google's date filter (Past hour, Past day, Past week...) right under the search box, instead of buried in the Tools dropdown — plus ranges Google doesn't offer at all (3/6 months, 2/5 years), calendar-aligned presets (this week/month/quarter/year), and a custom date-range picker.
 
 ![Search Date Bar in action](screenshots/img1_ranges.png)
 
@@ -14,12 +14,13 @@ Google's own date filter takes two clicks to reach (Tools → Any time) and tops
 
 ## Features
 
-- One-click ranges: Any time, 1h, 1d, 7d, 1m, 6m, 1y, 2y, 5y
+- One-click ranges: Any time, 1h, 1d, 7d, 1mo, 3mo, 6mo, 1yr, 2yr, 5yr
+- Calendar-aligned presets too: This week, This month, This quarter, This year
 - Works on Images, Videos, News, Short videos, and Books, not just the main results page
 - Custom date range, with a native date picker
 - Verbatim toggle — exact words, no spelling correction or synonyms
 - Matches Google's own light/dark theme automatically
-- Zero layout shift — the bar never pushes the page around as it loads
+- Zero layout shift — the bar never pushes content down as it loads
 - Keyboard accessible
 - Works across Google's ~190 country domains
 

@@ -1,25 +1,50 @@
 
-/* content.js sets this class at document_start so the space exists before first paint (zero CLS). */
+/* content.js sets this class at document_start so the space exists before first paint (zero CLS).
+   Sized for the wrapper's two stacked rows (~28.7px each + 4px gap between them). */
 html.sdb-reserve-space #center_col {
 	position: relative;
-	padding-top: 20px;
+	padding-top: 53px;
 }
 
-html.sdb-reserve-space #center_col > .time-ul {
+html.sdb-reserve-space #center_col > .sdb-bar-wrapper {
 	position: absolute;
 	top: -16px;
 	left: 0;
 	right: 0;
 }
 
+/* One scrollbar for both rows together, not one per row — the wrapper
+   scrolls as a unit, .time-ul below just lays its chips out in a line. */
+.sdb-bar-wrapper {
+	overflow-x: auto;
+	scrollbar-width: thin; /* Firefox */
+}
+
+.sdb-bar-wrapper::-webkit-scrollbar {
+	height: 4px;
+}
+
+.sdb-bar-wrapper::-webkit-scrollbar-thumb {
+	background-color: #dadce0;
+	border-radius: 2px;
+}
+
+.sdb-bar-wrapper::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+html.sdb-dark .sdb-bar-wrapper::-webkit-scrollbar-thumb {
+	background-color: #5f6368;
+}
+
 /* Images has a related-searches row directly above #center_col — floating
    above the box like the default trick does would overlap it. */
 html.sdb-reserve-space-inset #center_col {
 	position: relative;
-	padding-top: 44px;
+	padding-top: 77px;
 }
 
-html.sdb-reserve-space-inset #center_col > .time-ul {
+html.sdb-reserve-space-inset #center_col > .sdb-bar-wrapper {
 	position: absolute;
 	top: 6px;
 	left: 0;
@@ -32,7 +57,10 @@ html.sdb-reserve-space-inset #center_col > .time-ul {
 	padding: 2px 0px 2px 0px;
 	margin-bottom: 4px;
 	display: flex;
-	flex-wrap: wrap;
+	/* nowrap, not wrap: a wrapped row's height changes with viewport width,
+	   which breaks the fixed CLS-reservation math above. Scrolling (see
+	   .sdb-bar-wrapper) is what actually handles the overflow. */
+	flex-wrap: nowrap;
 	align-items: center;
 	gap: 4px;
 	width: auto;
@@ -42,10 +70,7 @@ html.sdb-reserve-space-inset #center_col > .time-ul {
 	margin: 0;
 	text-align: center;
 	min-width: 18px;
-}
-
-.time-li-range {
-	position: relative;
+	flex-shrink: 0; /* scroll, don't squish, when the row overflows */
 }
 
 /* Divider: verbatim is a separate toggle, not part of the time-range set. */
@@ -113,9 +138,7 @@ html.sdb-dark .time-h3-sel:hover {
 
 #custom-range-popup {
 	display: none;
-	position: absolute;
-	top: 100%;
-	left: 0;
+	position: fixed;
 	background-color: #ffffff;
 	margin-top: 6px;
 	z-index: 10;
