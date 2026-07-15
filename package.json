@@ -5,6 +5,7 @@
   "description": "Playwright test harness for the Google Search by Date Chrome extension",
   "scripts": {
     "test": "playwright test tests",
+    "test:unit": "node --test \"tests/**/*.test.js\"",
     "release": "node scripts/release.js",
     "generate-icon": "node scripts/generate-icon.js",
     "generate-screenshots": "node scripts/generate-screenshots.js",

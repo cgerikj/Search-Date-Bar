@@ -83,6 +83,21 @@ html.sdb-dark .time-li-verbatim {
 	border-left-color: #5f6368;
 }
 
+/* Approximate result count — plain muted text (not a chip), pushed to the
+   row's end so it sits under Verbatim in the row above. */
+.time-li-count {
+	margin-left: auto;
+	padding: 0 4px;
+	color: #70757a;
+	font-family: "Google Sans", arial, sans-serif;
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+html.sdb-dark .time-li-count {
+	color: #9aa0a6;
+}
+
 .time-li a {
 	display: block;
 	text-decoration: none;

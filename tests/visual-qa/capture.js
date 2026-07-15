@@ -33,6 +33,7 @@ const SCENARIOS = [
 			await page.waitForTimeout(400);
 		},
 	},
+	{ group: 'Extension states', name: '09c-result-count', query: 'coffee' },
 	{
 		group: 'Extension states',
 		name: '10-custom-range-active',

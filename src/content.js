@@ -125,6 +125,42 @@ function createCalendarButton(preset, isSelected) {
 	return li;
 }
 
+// Reads Google's hidden #result-stats and returns a short "~3B" readout, or
+// null. abbreviateCount/parseResultCount live in result-count.js (loaded
+// first; see manifest) so they can be unit-tested without a browser.
+function readResultCount() {
+	const stats = document.getElementById("result-stats");
+	const abbreviated = stats ? parseResultCount(stats.textContent) : null;
+	return abbreviated ? "~" + abbreviated : null;
+}
+
+// A tiny "~151M" readout at the row's end (under Verbatim) — live feedback that
+// the filter worked: a shorter range visibly drops the count. On some pages
+// (e.g. heavy knowledge-panel results) Google adds #result-stats *after* this
+// script runs, so if it isn't there yet, watch for it and fill in when it is.
+function createResultCountElement() {
+	const li = document.createElement("li");
+	li.className = "time-li time-li-count";
+	li.title = "Approximate number of results";
+
+	const fill = () => {
+		const count = readResultCount();
+		li.textContent = count || "";
+		li.style.display = count ? "" : "none";
+		return !!count;
+	};
+
+	if (!fill()) {
+		// #result-stats lives inside #top_nav (Google's tabs/tools bar) — scope
+		// the observer there instead of the whole document.
+		const scope = document.getElementById("top_nav") || document.documentElement;
+		const observer = new MutationObserver(() => { if (fill()) observer.disconnect(); });
+		observer.observe(scope, { childList: true, subtree: true });
+		setTimeout(() => observer.disconnect(), 8000);
+	}
+	return li;
+}
+
 function insertCalendarRow(afterNode, rangeButton, presets, currentCdMin) {
 	const sdbCal = getParameterByName("sdb_cal");
 	const calendarRow = document.createElement("ul");
@@ -138,6 +174,7 @@ function insertCalendarRow(afterNode, rangeButton, presets, currentCdMin) {
 		calendarRow.appendChild(createCalendarButton(preset, isSelected));
 	}
 	calendarRow.appendChild(rangeButton);
+	calendarRow.appendChild(createResultCountElement());
 	afterNode.after(calendarRow);
 	return calendarRow;
 }

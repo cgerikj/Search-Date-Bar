@@ -6,7 +6,7 @@
   "manifest_version": 3,
   "content_scripts": [{
     "css": ["styles.css"],
-    "js": ["content.js"],
+    "js": ["result-count.js", "content.js"],
     "run_at": "document_start",
     "matches": [
       "https://www.google.com/search*",

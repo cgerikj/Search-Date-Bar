@@ -3,6 +3,9 @@ const { defineConfig } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
+  // Live browser tests are *.spec.js; *.test.js are fast Node unit tests
+  // (run via `npm run test:unit`), which Playwright must not pick up.
+  testMatch: '**/*.spec.js',
   // Must comfortably exceed the 5-minute manual CAPTCHA-solve wait in
   // fixtures/extension.js, or Playwright kills the test (and, combined
   // with retries, opens a brand new browser window) before a human ever
